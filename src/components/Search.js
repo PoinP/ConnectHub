@@ -1,5 +1,6 @@
 import { useId, useState } from "react";
 import { MaterialSymbol } from "react-material-symbols";
+import { MaterialButton } from "./MaterialButton";
 
 function Search({
   placeholder = "Search",
@@ -14,6 +15,7 @@ function Search({
 
   return (
     <section style={{ fontSize: { fontSize } }} className={className}>
+      <MaterialButton style={{marginRight: "4px"}} icon="add" size={fontSize * 1.5} />
       <form className={`search-input ${focused ? "search-input-focused" : ""}`}>
         <label htmlFor={searchID} style={{ display: "none" }}>
           Search Input
@@ -37,9 +39,7 @@ function Search({
             <MaterialSymbol icon="close" size={fontSize} />
           </button>
         )}
-        <button className="pure-button">
-          <MaterialSymbol icon="search" size={fontSize} />
-        </button>
+        <MaterialButton icon="search" size={fontSize} />
       </form>
     </section>
   );

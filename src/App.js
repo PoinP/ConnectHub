@@ -18,7 +18,7 @@ import { Contact } from "./components/contact/Contact.js";
 export const contactsList = [
   {
     id: 1,
-    avatar: "https://i.pravatar.cc/120?u=118836",
+    avatar: "https://i.pravatar.cc/1200?u=118836",
     name: "Ivan Ivanov",
     details: {
       phone: [
@@ -37,7 +37,27 @@ export const contactsList = [
         {
           type: "mail",
           detail: "Personal",
+          content: "vankata_kk@abv.bg",
+        },
+        {
+          type: "mail",
+          detail: "Personal",
           content: "vankata_we12@gmail.com",
+        },
+        {
+          type: "mail",
+          detail: "Personal",
+          content: "XXivanchoXX@abv.bg",
+        },
+        {
+          type: "mail",
+          detail: "Personal",
+          content: "vanio_99@gmail.com",
+        },
+        {
+          type: "mail",
+          detail: "Personal",
+          content: "ivan.i@protonmail.com",
         },
         {
           type: "mail",
@@ -61,12 +81,26 @@ export const contactsList = [
           content: "Brother",
         },
       ],
+      relationShip: [
+        {
+          type: "workspaces",
+          detail: "Relationship",
+          content: "Brother",
+        },
+      ],
+      nickName: [
+        {
+          type: "person",
+          detail: "Nickname",
+          content: "The One"
+        }
+      ]
     },
     tags: ["Family", "Friends"],
   },
   {
     id: 2,
-    avatar: "https://i.pravatar.cc/120?u=118866",
+    avatar: "https://i.pravatar.cc/1200?u=118866",
     name: "Kristina Koleva",
     details: {
       phone: [
@@ -90,7 +124,7 @@ export const contactsList = [
   },
   {
     id: 3,
-    avatar: "https://i.pravatar.cc/120?u=114836",
+    avatar: "https://i.pravatar.cc/1200?u=114836",
     name: "Georgi Ivanov",
     details: {
       phone: [
@@ -116,7 +150,7 @@ function App() {
       </NavBar>
       <Main>
         <VerticalContacts>
-          <Search size={20} />
+          <Search size={20} className="search-area"/>
           <VerticalContactsList
             contacts={contactsList}
             selectedContact={selectedContact}
