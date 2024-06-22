@@ -4,7 +4,7 @@ import { ContactDetails } from "./ContactDetails.js";
 import { ContactInfo } from "./ContactInfo.js";
 import { ContactTags } from "./ContactTags.js";
 
-export function Contact({ contact, onContactEdit }) {
+export function Contact({ contact, onContactEdit, onSetPopup }) {
   function setTags(tagsCallback) {
     if (!contact.tags)
       return;
@@ -23,7 +23,7 @@ export function Contact({ contact, onContactEdit }) {
           <ContactInfo header={"Details"} category={contact.details} />
         )}
         {contact.tags && (
-          <ContactTags tags={contact.tags} onSetTags={setTags} />
+          <ContactTags tags={contact.tags} onSetTags={setTags} onSetPopup={onSetPopup} />
         )}
         {contact.info && (
           <ContactInfo header={"Info"} category={contact.info} />

@@ -9,6 +9,7 @@ import { VerticalContacts } from "./components/vertical-contacts/VerticalContact
 import { VerticalContactsList } from "./components/vertical-contacts/VerticalContactsList.js";
 
 import { Contact } from "./components/contact/Contact.js";
+import { NewTagPopup } from "./components/prompts/NewTagPopup.js";
 
 export const contactsList = [
   {
@@ -80,9 +81,9 @@ export const contactsList = [
         {
           type: "person",
           detail: "Nickname",
-          content: "The One"
-        }
-      ]
+          content: "The One",
+        },
+      ],
     },
     tags: ["Family", "Friends"],
   },
@@ -129,41 +130,53 @@ export const contactsList = [
 ];
 
 function App() {
-  const [contacts, setContacts] = useState(contactsList)
+  const [newTagPopup, setNewTagPopup] = useState(null);
+  const [contacts, setContacts] = useState(contactsList);
   const [selectedContact, setSelectedContact] = useState(null);
 
   function handleContactEdit(contact) {
     const newContacts = [...contacts];
-    const contactIndex = newContacts.findIndex(c => c.id === contact.id);
-    
-    if (contactIndex === -1)
-      return;
+    const contactIndex = newContacts.findIndex((c) => c.id === contact.id);
+
+    if (contactIndex === -1) return;
 
     newContacts[contactIndex] = contact;
     setContacts(newContacts);
     setSelectedContact(contact);
   }
 
-
   return (
-    <section className="page">
-      <NavBar>
-        <Logo></Logo>
-      </NavBar>
-      <Main>
-        <VerticalContacts>
-          <Search size={20} className="search-area"/>
-          <VerticalContactsList
-            contacts={contacts}
-            selectedContact={selectedContact}
-            onSelectContact={setSelectedContact}
-          />
-        </VerticalContacts>
-        {selectedContact && (
-          <Contact contact={selectedContact} onContactEdit={handleContactEdit}/>            
-        )}
-      </Main>
-    </section>
+    <>
+      {newTagPopup && (
+        <NewTagPopup
+          selectedContact={selectedContact}
+          onContactEdit={handleContactEdit}
+          onSetPopup={setNewTagPopup}
+        />
+      )}
+      <section className="page">
+        <NavBar>
+          <Logo></Logo>
+        </NavBar>
+        <Main>
+          <VerticalContacts>
+            <Search size={20} className="search-area" />
+            <VerticalContactsList
+              contacts={contacts}
+              selectedContact={selectedContact}
+              onSelectContact={setSelectedContact}
+            />
+          </VerticalContacts>
+          {selectedContact && (
+            <Contact
+              contact={selectedContact}
+              onContactEdit={handleContactEdit}
+              onSetPopup={setNewTagPopup}
+            />
+          )}
+        </Main>
+      </section>
+    </>
   );
 }
 
