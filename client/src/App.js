@@ -1,5 +1,6 @@
 import { useState } from "react";
-import Search from "./components/Search.js";
+import { useMediaQuery } from "react-responsive";
+import { Search } from "./components/Search.js";
 
 import { Logo } from "./components/Logo.js";
 import { Main } from "./components/Main.js";
@@ -8,11 +9,11 @@ import { NavBar } from "./components/NavBar.js";
 import { VerticalContacts } from "./components/vertical-contacts/VerticalContacts.js";
 import { VerticalContactsList } from "./components/vertical-contacts/VerticalContactsList.js";
 
+import { GridContacts } from "./components/grid-contacts/GridContacts.js";
+import { GridContactsList } from "./components/grid-contacts/GridContactsList.js";
+
 import { Contact } from "./components/contact/Contact.js";
 import { NewTagPopup } from "./components/prompts/NewTagPopup.js";
-import { GridContacts } from "./components/grid-contacts/GridContacts.js";
-import { GridContactsList } from "./components/grid-contacts/GridContacts.js";
-import { useMediaQuery } from "react-responsive";
 
 export const contactsList = [
   {
