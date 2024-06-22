@@ -5,7 +5,7 @@ import { PureButton } from "../PureButton";
 export function ContactTags({ tags, onSetTags, onSetPopup }) {
   return (
     <div className="contact-sub-details">
-      <h1>Tags</h1>
+      <h1 className="info-header">Tags</h1>
       <ContactElement icon="sell">
         <PureButton onClick={() => onSetPopup(true)}>Add Tag</PureButton>
       </ContactElement>

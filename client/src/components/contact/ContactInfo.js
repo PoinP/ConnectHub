@@ -9,7 +9,7 @@ export function ContactInfo({ header, category }) {
 
   return (
     <div className="contact-sub-details">
-      <h1>{header}</h1>
+      <h1 className="info-header">{header}</h1>
       {Object.keys(category).map((key, idx) => (
         <>
           {idx !== 0 && <ContactElementBreak />}

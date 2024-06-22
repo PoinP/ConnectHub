@@ -56,9 +56,11 @@
   }
   
   .contact-element-content {
+    display: flex;
     margin-left: 1em;
     max-width: 100%;
     text-wrap: wrap;
+    flex-direction: column;
     overflow-wrap: break-word;
   }
   
@@ -95,7 +97,7 @@
 
 @media (max-width: 820px) {
    .contact-header .contact-name {
-        margin: 1em 0 0 0;
+        margin: 1em 0;
         font-size: 32px;
     }
 
