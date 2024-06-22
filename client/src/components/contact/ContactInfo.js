@@ -1,5 +1,8 @@
-import { ContactElementBreak } from "./ContactElementBreak";
 import { ContactElementInfo } from "./ContactElementInfo";
+
+function ContactElementBreak() {
+  return <div style={{ margin: "10px 0" }} />;
+}
 
 export function ContactInfo({ header, category }) {
   if (!category || Object.keys(category).length === 0) return;

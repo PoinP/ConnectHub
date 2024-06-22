@@ -1,10 +1,10 @@
 import { MaterialButton } from "../MaterialButton";
 
-export function ContactTag({ children }) {
+export function ContactTag({ tag, children, onDeleteTag }) {
   return (
     <div className="contact-tag">
-      {children}
-      <MaterialButton icon="close" />
+      {tag}
+      <MaterialButton icon="close" onClick={() => onDeleteTag(tag)} />
     </div>
   );
 }

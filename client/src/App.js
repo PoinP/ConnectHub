@@ -8,11 +8,6 @@ import { NavBar } from "./components/NavBar.js";
 import { VerticalContacts } from "./components/vertical-contacts/VerticalContacts.js";
 import { VerticalContactsList } from "./components/vertical-contacts/VerticalContactsList.js";
 
-import { ContactActions } from "./components/contact/ContactActions.js";
-import { ContactHeader } from "./components/contact/ContactHeader.js";
-import { ContactDetails } from "./components/contact/ContactDetails.js";
-import { ContactInfo } from "./components/contact/ContactInfo.js";
-import { ContactTags } from "./components/contact/ContactTags.js";
 import { Contact } from "./components/contact/Contact.js";
 
 export const contactsList = [
@@ -67,28 +62,21 @@ export const contactsList = [
       ],
     },
     info: {
-      birthDay: [
+      birthday: [
         {
           type: "cake",
           detail: "Birthday",
           content: "12.03.2002",
         },
       ],
-      relationShip: [
+      relationship: [
         {
           type: "workspaces",
           detail: "Relationship",
           content: "Brother",
         },
       ],
-      relationShip: [
-        {
-          type: "workspaces",
-          detail: "Relationship",
-          content: "Brother",
-        },
-      ],
-      nickName: [
+      nickname: [
         {
           type: "person",
           detail: "Nickname",
@@ -141,7 +129,21 @@ export const contactsList = [
 ];
 
 function App() {
+  const [contacts, setContacts] = useState(contactsList)
   const [selectedContact, setSelectedContact] = useState(null);
+
+  function handleContactEdit(contact) {
+    const newContacts = [...contacts];
+    const contactIndex = newContacts.findIndex(c => c.id === contact.id);
+    
+    if (contactIndex === -1)
+      return;
+
+    newContacts[contactIndex] = contact;
+    setContacts(newContacts);
+    setSelectedContact(contact);
+  }
+
 
   return (
     <section className="page">
@@ -152,30 +154,13 @@ function App() {
         <VerticalContacts>
           <Search size={20} className="search-area"/>
           <VerticalContactsList
-            contacts={contactsList}
+            contacts={contacts}
             selectedContact={selectedContact}
             onSelectContact={setSelectedContact}
           />
         </VerticalContacts>
         {selectedContact && (
-          <Contact>
-            <ContactActions />
-            <ContactHeader contact={selectedContact} />
-            <ContactDetails>
-              {selectedContact.details && (
-                <ContactInfo
-                  header={"Details"}
-                  category={selectedContact.details}
-                />
-              )}
-              {selectedContact.tags && (
-                <ContactTags tags={selectedContact.tags} />
-              )}
-              {selectedContact.info && (
-                <ContactInfo header={"Info"} category={selectedContact.info} />
-              )}
-            </ContactDetails>
-          </Contact>
+          <Contact contact={selectedContact} onContactEdit={handleContactEdit}/>            
         )}
       </Main>
     </section>
