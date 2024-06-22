@@ -1,7 +1,6 @@
 import { ContactElement } from "./ContactElement";
 import { ContactTagList } from "./ContactTagList";
 import { PureButton } from "../PureButton";
-import { NewTagPrompt } from "../prompts/NewTagPopup";
 
 export function ContactTags({ tags, onSetTags, onSetPopup }) {
   return (

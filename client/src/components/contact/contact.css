@@ -1,0 +1,110 @@
+.contact {
+    display: inline;
+    flex-grow: 10;
+    padding: 2em;
+    overflow: scroll;
+  }
+  
+  .contact-actions {
+    display: flex;
+    justify-content: end;
+  }
+  
+  .contact-header {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 2rem 0 4rem;
+  }
+  
+  .contact-header img {
+    max-width: 20%;
+    border-radius: var(--img-border-radius);
+  }
+  
+  .contact-header .contact-name {
+    margin-top: 1rem;
+    font-weight: 500;
+    font-size: 42px;
+    text-align: center;
+  }
+  
+  .contact-details {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: start;
+    justify-content: space-between;
+  }
+  
+  .contact-sub-details {
+    flex-basis: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: start;
+    max-width: 50%;
+    margin-bottom: 2rem;
+  }
+  
+  .contact-element {
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+    margin: 4px 0;
+    max-width: 100%;
+  }
+  
+  .contact-element-content {
+    margin-left: 1em;
+    max-width: 100%;
+    text-wrap: wrap;
+    overflow-wrap: break-word;
+  }
+  
+  .contact-tag-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: left;
+    gap: 1em;
+  }
+  
+  .contact-tag {
+    display: flex;
+    align-items: center;
+  
+    padding: 3px 8px;
+  
+    border: 2px solid var(--secondary-accent-color);
+    border-radius: 8px;
+  }
+
+@media (max-width: 1024px) {
+    .contact-details {
+        flex-direction: column;
+        align-items: flex-start;
+        align-content: center;
+        justify-content: space-between;
+    }
+
+    .contact-header img {
+        margin: 1em 0 0 0;
+        max-width: 40%;
+    }
+}
+
+@media (max-width: 820px) {
+   .contact-header .contact-name {
+        margin: 1em 0 0 0;
+        font-size: 32px;
+    }
+
+    .contact-header img {
+        margin: 1em 0 0 0;
+        max-width: 50%;
+    }
+
+    .contact-header {
+        margin: 1em 0 0 0;
+    }
+}

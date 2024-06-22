@@ -1,4 +1,5 @@
 import { VerticalContact } from "./VerticalContact";
+import "./vertical-contacts.css"
 
 export function VerticalContactsList({ contacts, selectedContact, onSelectContact }) {
   return (

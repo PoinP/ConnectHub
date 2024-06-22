@@ -3,6 +3,7 @@ import { ContactHeader } from "./ContactHeader.js";
 import { ContactDetails } from "./ContactDetails.js";
 import { ContactInfo } from "./ContactInfo.js";
 import { ContactTags } from "./ContactTags.js";
+import "./contact.css"
 
 export function Contact({ contact, onContactEdit, onSetPopup }) {
   function setTags(tagsCallback) {

@@ -1,4 +1,3 @@
-
 export function VerticalContact({ contact, selectedContact, onSelectContact }) {
   const { id, name, avatar, details } = contact;
   const phoneNumber = details.phone[0].content;
