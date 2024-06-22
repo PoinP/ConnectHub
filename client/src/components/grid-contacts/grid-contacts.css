@@ -74,11 +74,7 @@
     border-radius: var(--img-border-radius);
 }
 
-.vert-grid-border {
-    width: 60%;
-    border-bottom: 1px solid var(--accent-color);
-    border-radius: 10px;
-    margin: 2px auto;
+.grid-bot-border {
     display: none;
 }
 
@@ -142,7 +138,7 @@
         max-width: 30%;
     }
 
-    .vert-grid-border {
+    .grid-bot-border {
         display: block;
     }
   }

@@ -122,3 +122,20 @@ body {
 .contacts-search {
   width: 100%;
 }
+
+.horiz-bot-border {
+  width: 60%;
+  border-bottom: 1px solid var(--accent-color);
+  border-radius: 10px;
+  margin: 2px auto;
+}
+
+.mat-button {
+  padding: 2px;
+  transition: all 0.25s;
+  border-radius: 20px;
+}
+
+.mat-button:hover {
+  background-color: var(--accent-color);
+}

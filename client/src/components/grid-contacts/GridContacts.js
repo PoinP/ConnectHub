@@ -40,7 +40,7 @@ function GridContact({ contact, onSelectContact }) {
             <span className="grid-contact-phone">{phoneNumber}</span>
         </div>
         </li>
-        <div className="vert-grid-border"></div>
+        <div className="horiz-bot-border grid-bot-border"></div>
     </>
   );
 }

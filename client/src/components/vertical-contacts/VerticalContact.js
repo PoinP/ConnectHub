@@ -22,7 +22,7 @@ export function VerticalContact({ contact, selectedContact, onSelectContact }) {
           <span className="contact-detail">{phoneNumber}</span>
         </aside>
       </section>
-      <div className="vert-contact-border" />
+      <div className="horiz-bot-border" />
     </li>
   );
 }

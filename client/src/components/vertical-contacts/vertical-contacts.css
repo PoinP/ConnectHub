@@ -27,13 +27,6 @@
   align-items: center;
 }
 
-.vert-contact-border {
-  width: 60%;
-  border-bottom: 1px solid var(--accent-color);
-  border-radius: 10px;
-  margin: 2px auto;
-}
-
 .vert-contact:hover {
   background-color: var(--secondary-accent-color);
 }
