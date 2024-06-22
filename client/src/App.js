@@ -417,6 +417,7 @@ function App() {
             />
             <NavItem icon="stars" fill={true} size={58} />
             <NavItem icon="build_circle" fill={true} size={58} />
+            <NavItem icon="delete_history" fill={true} size={58} />
           </NavGroup>
           <NavGroup className="tag-nav-group" title="Tags">
             <NavItem icon="new_label">Add Tag</NavItem>
