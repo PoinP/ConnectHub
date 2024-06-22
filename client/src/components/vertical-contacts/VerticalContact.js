@@ -1,3 +1,5 @@
+import { HorziontalBorder } from "../HorizontalBorder";
+
 export function VerticalContact({ contact, selectedContact, onSelectContact }) {
   const { id, name, avatar, details } = contact;
   const phoneNumber = details.phone[0].content;
@@ -22,7 +24,7 @@ export function VerticalContact({ contact, selectedContact, onSelectContact }) {
           <span className="contact-detail">{phoneNumber}</span>
         </aside>
       </section>
-      <div className="horiz-bot-border" />
+      <HorziontalBorder/>
     </li>
   );
 }

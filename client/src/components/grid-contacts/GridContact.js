@@ -1,3 +1,5 @@
+import { HorziontalBorder } from "../HorizontalBorder";
+
 export function GridContact({ contact, onSelectContact }) {
     const { id, name, avatar, details } = contact;
     const phoneNumber = details.phone[0].content;
@@ -18,7 +20,7 @@ export function GridContact({ contact, onSelectContact }) {
                     <span className="grid-contact-phone">{phoneNumber}</span>
                 </div>
             </li>
-            <div className="horiz-bot-border grid-bot-border"></div>
+            <HorziontalBorder className="grid-bot-border"/>
         </>
     );
 }

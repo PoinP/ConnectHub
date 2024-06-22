@@ -2,9 +2,9 @@ import { useState } from "react";
 import { useMediaQuery } from "react-responsive";
 import { Search } from "./components/Search.js";
 
-import { Logo } from "./components/Logo.js";
+import { Logo } from "./components/navigation/Logo.js";
 import { Main } from "./components/Main.js";
-import { NavBar } from "./components/NavBar.js";
+import { NavBar } from "./components/navigation/NavBar.js";
 
 import { VerticalContacts } from "./components/vertical-contacts/VerticalContacts.js";
 import { VerticalContactsList } from "./components/vertical-contacts/VerticalContactsList.js";
@@ -14,6 +14,8 @@ import { GridContactsList } from "./components/grid-contacts/GridContactsList.js
 
 import { Contact } from "./components/contact/Contact.js";
 import { NewTagPopup } from "./components/prompts/NewTagPopup.js";
+import { NavGroup } from "./components/navigation/NavGroup.js";
+import { NavItem, NavPopupItem } from "./components/navigation/NavItem.js";
 
 export const contactsList = [
   {
@@ -379,19 +381,21 @@ function App() {
     setSelectedContact(contact);
   }
 
-  const isOnBigScreen = useMediaQuery({ query: '(max-width: 1028px)' });
-  const isOnMediumScreen = useMediaQuery({ query: '(max-width: 840px)' });
-  const isOnSmallScreen = useMediaQuery({ query: '(max-width: 640px)' });
+  const isOnBigScreen = useMediaQuery({ query: "(max-width: 1028px)" });
+  const isOnMediumScreen = useMediaQuery({ query: "(max-width: 840px)" });
+  const isOnSmallScreen = useMediaQuery({ query: "(max-width: 640px)" });
 
-  const gridSearch = isOnSmallScreen ? 21
-                   : isOnMediumScreen ? 32
-                   : isOnBigScreen ? 64
-                   : 64;
+  const gridSearch = 
+        isOnSmallScreen ? 21
+      : isOnMediumScreen ? 32
+      : isOnBigScreen ? 64
+      : 64;
 
-  const vertSearch = isOnSmallScreen ? 10
-                   : isOnMediumScreen ? 15
-                   : isOnBigScreen ? 20
-                   : 20;
+  const vertSearch = 
+        isOnSmallScreen ? 10
+      : isOnMediumScreen ? 15
+      : isOnBigScreen ? 20
+      : 20;
 
   return (
     <>
@@ -405,22 +409,50 @@ function App() {
       <section className="page">
         <NavBar>
           <Logo></Logo>
+          <NavGroup className="main-nav-group">
+            <NavItem
+              icon="account_circle"
+              size={58}
+              onClick={() => setSelectedContact(null)}
+            />
+            <NavItem icon="stars" fill={true} size={58} />
+            <NavItem icon="build_circle" fill={true} size={58} />
+          </NavGroup>
+          <NavGroup className="tag-nav-group" title="Tags">
+            <NavItem icon="new_label">Add Tag</NavItem>
+            <NavItem icon="label">Family</NavItem>
+
+          </NavGroup>
+          <NavGroup className="settings-nav-group" showHorizBorder={false}>
+            <NavItem icon="manage_accounts" fill={true} size={28} />
+            <NavItem icon="logout" fill={true} size={28} />
+            <NavItem icon="settings" fill={true} size={28} />
+          </NavGroup>
         </NavBar>
         <Main>
-          {selectedContact ?
-          !isOnSmallScreen &&
-          <VerticalContacts>
-            <Search size={vertSearch} className="search-area" />
-            <VerticalContactsList
-              contacts={contacts}
-              selectedContact={selectedContact}
-              onSelectContact={setSelectedContact}
-            />
-          </VerticalContacts> :
-          <GridContacts>
-              <Search size={gridSearch} className="search-area grid-search-area" />
-            <GridContactsList contacts={contacts} onSelectContact={setSelectedContact} />
-          </GridContacts>}
+          {selectedContact ? (
+            !isOnSmallScreen && (
+              <VerticalContacts>
+                <Search size={vertSearch} className="search-area vert-search-area " />
+                <VerticalContactsList
+                  contacts={contacts}
+                  selectedContact={selectedContact}
+                  onSelectContact={setSelectedContact}
+                />
+              </VerticalContacts>
+            )
+          ) : (
+            <GridContacts>
+              <Search
+                size={gridSearch}
+                className="search-area grid-search-area"
+              />
+              <GridContactsList
+                contacts={contacts}
+                onSelectContact={setSelectedContact}
+              />
+            </GridContacts>
+          )}
           {selectedContact && (
             <Contact
               contact={selectedContact}

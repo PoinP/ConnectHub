@@ -2,7 +2,7 @@ import { useId, useState } from "react";
 import { MaterialSymbol } from "react-material-symbols";
 import { MaterialButton } from "./MaterialButton";
 
-function Search({
+export function Search({
   placeholder = "Search",
   size = 12,
   fontSize = 18,

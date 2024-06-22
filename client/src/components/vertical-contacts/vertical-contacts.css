@@ -11,6 +11,10 @@
   align-items: center;
 }
 
+.vert-search-area {
+  margin-top: 1rem;
+}
+
 .vert-contacts-list {
   padding: 0;
   list-style: none;
