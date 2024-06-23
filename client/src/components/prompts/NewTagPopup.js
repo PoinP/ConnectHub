@@ -1,3 +1,4 @@
+import { Button } from "../Button";
 import "./prompts.css";
 
 import { useState } from "react";
@@ -36,21 +37,21 @@ export function NewTagPopup({ selectedContact, onContactEdit, onSetPopup }) {
     >
       <div class="prompt" onClick={(e) => e.stopPropagation()}>
         <h4 class="prompt-header">Create a tag</h4>
-        <form class="form" onSubmit={() => handleAddTag()}>
+        <form class="prompt-form" onSubmit={() => handleAddTag()}>
           <input
-            className={`text-input ${focused ? "text-input-focused" : ""}`}
+            className={`text-input ${focused && "text-input-focused"}`}
             type="text"
             onChange={(e) => setTag(e.target.value)}
             onFocus={() => setFocused(true)}
             onBlur={() => setFocused(false)}
           ></input>
           <div class="button-layout">
-            <button className="prompt-button" onClick={() => handleAddTag()}>
+            <Button onClick={() => handleAddTag()}>
               Save
-            </button>
-            <button className="prompt-button" onClick={() => onSetPopup(false)}>
+            </Button>
+            <Button onClick={() => onSetPopup(false)}>
               Cancel
-            </button>
+            </Button>
           </div>
         </form>
       </div>

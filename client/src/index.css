@@ -10,6 +10,7 @@
   --text-color: #0d1b2a;
   --text-accent-color: #636779;
   --focus-color: #fcbf49;
+  --error-color: #db2938;
 
   --img-border-radius: 30%;
 }
@@ -131,4 +132,23 @@ body {
 
 .mat-button:hover {
   background-color: var(--accent-color);
+}
+
+.button {
+  margin: 0.375em;
+  padding: 0.5em 0.375em;
+  min-width: 5em;
+  cursor: pointer;
+  border-radius: 0.625em;
+  border: 1px solid var(--accent-color);
+  background-color: var(--primary-color);
+  transition: all .25s;
+}
+
+.button:hover {
+  background-color: var(--focus-color);
+}
+
+.hidden {
+  visibility: hidden;
 }

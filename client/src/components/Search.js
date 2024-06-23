@@ -16,7 +16,7 @@ export function Search({
   return (
     <section style={{ fontSize: { fontSize } }} className={className}>
       <MaterialButton className="mat-button" style={{marginRight: "4px"}} icon="add" size={fontSize * 1.5} />
-      <form className={`search-input ${focused ? "search-input-focused" : ""}`}>
+      <form className={`search-input ${focused && "search-input-focused"}`}>
         <label htmlFor={searchID} style={{ display: "none" }}>
           Search Input
         </label>

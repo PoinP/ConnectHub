@@ -16,6 +16,7 @@ import { Contact } from "./components/contact/Contact.js";
 import { NewTagPopup } from "./components/prompts/NewTagPopup.js";
 import { NavGroup } from "./components/navigation/NavGroup.js";
 import { NavItem } from "./components/navigation/NavItem.js";
+import { UserAccess } from "./components/user-access/UserAcess.js";
 
 export const contactsList = [
   {
@@ -366,6 +367,7 @@ export const contactsList = [
 ];
 
 function App() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [newTagPopup, setNewTagPopup] = useState(null);
   const [contacts, setContacts] = useState(contactsList);
   const [selectedContact, setSelectedContact] = useState(null);
@@ -398,6 +400,9 @@ function App() {
       : isOnMediumScreen ? 15
       : isOnBigScreen ? 20
       : 20;
+
+  if (!isLoggedIn)
+    return <UserAccess onFinish={setIsLoggedIn}/>
 
   return (
     <>
@@ -469,6 +474,8 @@ function App() {
     </>
   );
 }
+
+
 
 //Todo
 // function ContactLabels() {
