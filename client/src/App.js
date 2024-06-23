@@ -15,7 +15,7 @@ import { GridContactsList } from "./components/grid-contacts/GridContactsList.js
 import { Contact } from "./components/contact/Contact.js";
 import { NewTagPopup } from "./components/prompts/NewTagPopup.js";
 import { NavGroup } from "./components/navigation/NavGroup.js";
-import { NavItem, NavPopupItem } from "./components/navigation/NavItem.js";
+import { NavItem } from "./components/navigation/NavItem.js";
 
 export const contactsList = [
   {
@@ -384,9 +384,11 @@ function App() {
   const isOnBigScreen = useMediaQuery({ query: "(max-width: 1028px)" });
   const isOnMediumScreen = useMediaQuery({ query: "(max-width: 840px)" });
   const isOnSmallScreen = useMediaQuery({ query: "(max-width: 640px)" });
+  const isOnVerySmallScreen = useMediaQuery({ query: "(max-width: 475px)" });
 
   const gridSearch = 
-        isOnSmallScreen ? 21
+        isOnVerySmallScreen ? 16
+      : isOnSmallScreen ? 21
       : isOnMediumScreen ? 32
       : isOnBigScreen ? 64
       : 64;

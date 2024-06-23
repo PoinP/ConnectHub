@@ -109,4 +109,16 @@
   .contact-header {
     margin: 1em 0 0 0;
   }
+
+  .contact-details {
+    align-content: flex-start;
+  }
+
+  .contact-element {
+    max-width: max-content;
+  }
+
+  .contact {
+    padding: 2em 0.5em;
+  }
 }
