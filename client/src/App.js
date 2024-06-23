@@ -17,6 +17,7 @@ import { NewTagPopup } from "./components/prompts/NewTagPopup.js";
 import { NavGroup } from "./components/navigation/NavGroup.js";
 import { NavItem } from "./components/navigation/NavItem.js";
 import { UserAccess } from "./components/user-access/UserAcess.js";
+import { NewContactPopup } from "./components/prompts/contact-popup/NewContactPopup.js";
 
 export const contactsList = [
   {
@@ -400,6 +401,8 @@ function App() {
       : isOnMediumScreen ? 15
       : isOnBigScreen ? 20
       : 20;
+
+  return <NewContactPopup></NewContactPopup>
 
   if (!isLoggedIn)
     return <UserAccess onFinish={setIsLoggedIn}/>

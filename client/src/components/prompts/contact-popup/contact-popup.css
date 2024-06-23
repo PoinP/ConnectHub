@@ -1,0 +1,57 @@
+#avatar-upload {
+    display: none;
+}
+
+.file-upload {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 1em;
+}
+
+.file-upload img {
+    cursor: pointer;
+    max-width: 40%;
+    aspect-ratio: 1;
+    object-fit: cover;
+}
+
+.avatar {
+    border-radius: var(--img-border-radius);
+}
+
+.contact-input-container {
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+    margin: 2px 0;
+    max-width: 100%;
+    height: 1.5em;
+}
+
+.contact-input {
+    width: 70%;
+    padding: 4px 8px;
+    border: 1px solid var(--accent-color);
+    border-radius: 5px;
+    resize: none;
+}
+
+.contact-input:focus {
+    border: 1px solid var(--focus-color);
+    outline: none;
+}
+
+.last-category-input {
+    margin-bottom: 0.5em;
+}
+
+.short-contact-input {
+    width: 50%;
+}
+
+.input-cluster {
+    display: flex;
+    flex-direction: column;
+}
