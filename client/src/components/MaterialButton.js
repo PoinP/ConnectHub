@@ -9,10 +9,7 @@ export function MaterialButton({
       <MaterialSymbol
         icon={icon}
         fill={fill}
-        weight={weight}
-        grade={grade}
         size={size}
-        color={color}
         as={as} />
     </PureButton>
   );

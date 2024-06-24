@@ -100,8 +100,7 @@ const requirementStarStyle = {
 }
 
 export function ContactPopup({ contact, onAddContact, onEditContact, onSetPopup }) {
-    const [imageBlob, setImageBlob] = useState(null);
-    const [selectedImage, setSelectedImage] = useState("");
+    const [selectedAvatar, setSelectedAvatar] = useState("");
 
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
@@ -127,7 +126,7 @@ export function ContactPopup({ contact, onAddContact, onEditContact, onSetPopup 
 
       const { avatar, name, details, info, tags } = contact;
 
-      setSelectedImage(avatar);
+      setSelectedAvatar(avatar);
 
       setFirstName(name.first);
       setLastName(name.last);
@@ -201,11 +200,8 @@ export function ContactPopup({ contact, onAddContact, onEditContact, onSetPopup 
     }
 
     function handleSelectAvatar(e) {
-      setImageBlob(blob => {
-        const currBlob = e.target.files[0] || blob;
-        setSelectedImage(currBlob ? URL.createObjectURL(currBlob) : null)
-        return currBlob;
-      });
+      const avatarBlob = e.target.files[0];
+      setSelectedAvatar(avatar => avatarBlob ? URL.createObjectURL(avatarBlob) : avatar);
     }
 
     function handleCreateContact() {
@@ -213,7 +209,7 @@ export function ContactPopup({ contact, onAddContact, onEditContact, onSetPopup 
 
       const newContact = {
         id: contact ? contact.id : -1,
-        avatar: selectedImage,
+        avatar: selectedAvatar,
         name: {
           first: firstName,
           last: lastName
@@ -274,7 +270,7 @@ export function ContactPopup({ contact, onAddContact, onEditContact, onSetPopup 
         <section className="prompt" onClick={(e) => e.stopPropagation()}>
           <h4 class="prompt-header">{`${contact ? "Edit" : "Create"} a contact`}</h4>
           <label className="file-upload" htmlFor="avatar-upload">
-            <Avatar src={selectedImage || null} alt="ProfilePicture"/>
+            <Avatar src={selectedAvatar || null} alt="ProfilePicture"/>
             <span className="pure-button" onClick={null} style={{marginTop: "6px"}}>Choose a photo</span>
           </label>
           <input id="avatar-upload" type="file" accept="image/png, image/jpeg, image/gif" onChange={handleSelectAvatar} />

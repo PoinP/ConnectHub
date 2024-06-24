@@ -23,6 +23,7 @@ export let contactsList = [
   {
     id: 1,
     avatar: "https://i.pravatar.cc/1200?u=118836",
+    isFavorite: true,
     name: {
       first: "Ivan",
       last: "Ivanov"
@@ -101,6 +102,7 @@ export let contactsList = [
   {
     id: 2,
     avatar: "https://i.pravatar.cc/1200?u=118866",
+    isFavorite: false,
     name: {
       first: "Kristina",
       last: "Koleva"
@@ -128,6 +130,7 @@ export let contactsList = [
   {
     id: 3,
     avatar: "https://i.pravatar.cc/1200?u=114836",
+    isFavorite: true,
     name: {
       first: "Georgi",
       last: "Ivanov"
@@ -150,6 +153,8 @@ contactsList = contactsList.sort((a, b) =>
           `${a.name.first} ${a.name.second}`.localeCompare(
           `${b.name.first} ${b.name.second}`));
 
+const favoriteContacts = contactsList.filter(contact => contact.isFavorite);
+
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(true);
   const [contacts, setContacts] = useState(contactsList);
@@ -159,6 +164,8 @@ function App() {
 
   const [contactPopup, setContactPopup] = useState(false);
   const [shouldEditContact, setShouldEditContact] = useState(false);
+
+  const [activeTab, setActiveTab] = useState("contacts");
 
   function handleContactAdd(contact) {
     setContacts(contacts => {
@@ -179,11 +186,11 @@ function App() {
       if (contactIndex === -1) return;
 
       newContacts[contactIndex] = contact;
+      setSelectedContact(contact);
+      setShouldEditContact(false);
+      
       return newContacts;
     });
-
-    setSelectedContact(contact);
-    setShouldEditContact(false);
   }
 
   function handleContactDelete(contactId) {
@@ -193,6 +200,22 @@ function App() {
   function handleEditContactPrompt(status) {
     setContactPopup(status);
     setShouldEditContact(status);
+  }
+
+  function handleSelectContacts() {
+    setContacts(contactsList);
+    setSelectedContact(null);
+    setActiveTab("contacts");
+  }
+
+  function handleSelectFavorites() {
+    setContacts(favoriteContacts);
+    setSelectedContact(null);
+    setActiveTab("favorites");
+  }
+
+  function handleFavoriteContact(contact) {
+    handleContactEdit({...contact, isFavorite: !contact.isFavorite});
   }
 
   const isOnBigScreen = useMediaQuery({ query: "(max-width: 1028px)" });
@@ -240,11 +263,17 @@ function App() {
             <NavItem
               icon="account_circle"
               size={58}
-              onClick={() => setSelectedContact(null)}
+              isActive={activeTab === "contacts"}
+              onClick={handleSelectContacts}
             />
-            <NavItem icon="stars" fill={true} size={58} />
-            <NavItem icon="build_circle" fill={true} size={58} />
-            <NavItem icon="delete_history" fill={true} size={58} />
+            <NavItem
+              icon="stars"
+              size={58}
+              isActive={activeTab === "favorites"}
+              onClick={handleSelectFavorites}
+            />
+            <NavItem icon="build_circle" size={58} />
+            <NavItem icon="delete_history" size={58} />
           </NavGroup>
           <NavGroup className="tag-nav-group" title="Tags">
             <NavItem icon="new_label">Add Tag</NavItem>
@@ -290,6 +319,7 @@ function App() {
               contact={selectedContact}
               onSetPopup={setNewTagPopup}
               onContactEdit={handleContactEdit}
+              onFavoriteContact={handleFavoriteContact}
               onSelectContact={setSelectedContact}
               onEditContact={handleEditContactPrompt}
               onDeleteContact={handleContactDelete}

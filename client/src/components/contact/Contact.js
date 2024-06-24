@@ -5,7 +5,7 @@ import { ContactInfo } from "./ContactInfo.js";
 import { ContactTags } from "./ContactTags.js";
 import "./contact.css"
 
-export function Contact({ contact, onSetPopup, onContactEdit, onSelectContact, onEditContact, onDeleteContact }) {
+export function Contact({ contact, onSetPopup, onContactEdit, onFavoriteContact, onSelectContact, onEditContact, onDeleteContact }) {
   function setTags(tagsCallback) {
     if (!contact.tags)
       return;
@@ -17,7 +17,7 @@ export function Contact({ contact, onSetPopup, onContactEdit, onSelectContact, o
   
   return (
     <section className="contact">
-      <ContactActions id={contact.id} onSelectContact={onSelectContact} onEditContact={onEditContact} onDeleteContact={onDeleteContact}/>
+      <ContactActions contact={contact} onFavoriteContact={onFavoriteContact} onSelectContact={onSelectContact} onEditContact={onEditContact} onDeleteContact={onDeleteContact}/>
       <ContactHeader contact={contact} />
       <ContactDetails>
         {contact.details && (

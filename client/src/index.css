@@ -135,7 +135,7 @@ img {
   border-radius: 20px;
 }
 
-.mat-button:hover {
+.mat-button-active, .mat-button:hover {
   background-color: var(--accent-color);
 }
 
