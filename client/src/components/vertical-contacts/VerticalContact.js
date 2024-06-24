@@ -1,7 +1,9 @@
+import { Avatar } from "../Avatar";
 import { HorziontalBorder } from "../HorizontalBorder";
 
 export function VerticalContact({ contact, selectedContact, onSelectContact }) {
   const { id, name, avatar, details } = contact;
+  const { first, last } = name;
   const phoneNumber = details.phone[0].content;
 
   const isSelected = selectedContact && selectedContact.id === id;
@@ -18,9 +20,9 @@ export function VerticalContact({ contact, selectedContact, onSelectContact }) {
       <section
         className={`vert-contact ${isSelected ? "vert-contact-selected" : ""}`}
       >
-        <img src={avatar} alt="person" />
+        <Avatar src={avatar} alt="Profile Picture" />
         <aside className="vert-contact-details">
-          <span className="vert-contact-name">{name}</span>
+          <span className="vert-contact-name">{`${first} ${last}`}</span>
           <span className="contact-detail">{phoneNumber}</span>
         </aside>
       </section>

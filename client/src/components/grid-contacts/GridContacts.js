@@ -2,7 +2,7 @@ import "./grid-contacts.css";
 
 export function GridContacts({ children }) {
   return (
-      <section class="grid-container">
+      <section className="grid-container">
         { children }
       </section>
   );

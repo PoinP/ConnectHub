@@ -6,10 +6,14 @@ export function ContactTags({ tags, onSetTags, onSetPopup }) {
   return (
     <div className="contact-sub-details">
       <h1 className="info-header">Tags</h1>
-      <ContactElement icon="label">
-        <PureButton onClick={() => onSetPopup(true)}>Add Tag</PureButton>
+      <ContactElement
+        className="clickable mat-button"
+        icon="label"
+        onClick={() => onSetPopup(true)}
+      >
+        <PureButton>Add Tag</PureButton>
       </ContactElement>
-      <ContactTagList tags={tags} onSetTags={onSetTags} />
+      {tags && <ContactTagList tags={tags} onSetTags={onSetTags} />}
     </div>
   );
 }

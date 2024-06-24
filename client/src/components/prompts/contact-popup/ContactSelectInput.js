@@ -15,7 +15,7 @@ export function ContactSelectInput({
       <MaterialSymbol style={materialStyle} icon={icon} size={size} />
       <select value={value} className="contact-input short-contact-input " onChange={onSelect}>
         {options.map(option => 
-            <option value={option === "No label" ? "" : option}>{option}</option>
+            <option value={option === "No Label" ? "" : option}>{option}</option>
         )}
       </select>
       {children}

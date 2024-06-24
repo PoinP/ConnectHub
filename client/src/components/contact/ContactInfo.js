@@ -11,10 +11,10 @@ export function ContactInfo({ header, category }) {
     <div className="contact-sub-details">
       <h1 className="info-header">{header}</h1>
       {Object.keys(category).map((key, idx) => (
-        <>
+        <div key={idx}>
           {idx !== 0 && <ContactElementBreak />}
           <ContactElementInfo data={category[key]} />
-        </>
+        </div>
       ))}
     </div>
   );

@@ -13,8 +13,6 @@
 .file-upload img {
     cursor: pointer;
     max-width: 40%;
-    aspect-ratio: 1;
-    object-fit: cover;
 }
 
 .avatar {

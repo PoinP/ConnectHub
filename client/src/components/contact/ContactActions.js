@@ -1,8 +1,13 @@
 import { MaterialButton } from "../MaterialButton";
 
-export function ContactActions({ size = 38, onSelectContact }) {
+export function ContactActions({ id, size = 38, onSelectContact, onEditContact, onDeleteContact }) {
+  function handleDeleteContact() {
+    onDeleteContact(id);
+    onSelectContact(null);
+  }
+
   return (
-    <form className="contact-actions">
+    <section className="contact-actions">
       <MaterialButton
         className="mat-button"
         style={{ marginRight: "auto" }}
@@ -12,8 +17,8 @@ export function ContactActions({ size = 38, onSelectContact }) {
       />
 
       <MaterialButton className="mat-button" icon="star" size={size} />
-      <MaterialButton className="mat-button" icon="edit" size={size} />
-      <MaterialButton className="mat-button" icon="delete" size={size} />
-    </form>
+      <MaterialButton className="mat-button" icon="edit" size={size} onClick={() => onEditContact(true)} />
+      <MaterialButton className="mat-button" icon="delete" size={size} onClick={handleDeleteContact} />
+    </section>
   );
 }

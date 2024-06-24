@@ -63,6 +63,7 @@ img {
 
 .main {
   display: flex;
+  justify-content: center;
   flex-grow: 1;
   overflow: scroll;
   overflow-x: inherit;
@@ -155,4 +156,14 @@ img {
 
 .hidden {
   visibility: hidden;
+}
+
+.contact-avatar {
+  aspect-ratio: 1;
+  object-fit: cover;
+  border-radius: var(--img-border-radius);
+}
+
+.clickable {
+  cursor: pointer;
 }

@@ -17,13 +17,16 @@ import { NewTagPopup } from "./components/prompts/NewTagPopup.js";
 import { NavGroup } from "./components/navigation/NavGroup.js";
 import { NavItem } from "./components/navigation/NavItem.js";
 import { UserAccess } from "./components/user-access/UserAcess.js";
-import { NewContactPopup } from "./components/prompts/contact-popup/NewContactPopup.js";
+import { ContactPopup } from "./components/prompts/contact-popup/ContactPopup.js";
 
-export const contactsList = [
+export let contactsList = [
   {
     id: 1,
     avatar: "https://i.pravatar.cc/1200?u=118836",
-    name: "Ivan Ivanov",
+    name: {
+      first: "Ivan",
+      last: "Ivanov"
+    },
     details: {
       phone: [
         {
@@ -71,11 +74,11 @@ export const contactsList = [
       ],
     },
     info: {
-      birthday: [
+      date: [
         {
           type: "cake",
           detail: "Birthday",
-          content: "12.03.2002",
+          content: "2002-03-12",
         },
       ],
       relationship: [
@@ -98,7 +101,10 @@ export const contactsList = [
   {
     id: 2,
     avatar: "https://i.pravatar.cc/1200?u=118866",
-    name: "Kristina Koleva",
+    name: {
+      first: "Kristina",
+      last: "Koleva"
+    },
     details: {
       phone: [
         {
@@ -109,11 +115,11 @@ export const contactsList = [
       ],
     },
     info: {
-      anniversary: [
+      date: [
         {
           type: "event",
           detail: "Anniversary",
-          content: "20.06.2019",
+          content: "2019-06-20",
         },
       ],
     },
@@ -122,7 +128,10 @@ export const contactsList = [
   {
     id: 3,
     avatar: "https://i.pravatar.cc/1200?u=114836",
-    name: "Georgi Ivanov",
+    name: {
+      first: "Georgi",
+      last: "Ivanov"
+    },
     details: {
       phone: [
         {
@@ -134,254 +143,56 @@ export const contactsList = [
     },
     info: {},
     tags: ["Close Friends", "Classmate"],
-  },
-  {
-    id: 1,
-    avatar: "https://i.pravatar.cc/1200?u=118836",
-    name: "Ivan Ivanov",
-    details: {
-      phone: [
-        {
-          type: "phone",
-          detail: "Home",
-          content: "+359892532378",
-        },
-        {
-          type: "phone",
-          detail: "Work",
-          content: "+359896218726",
-        },
-      ],
-      mail: [
-        {
-          type: "mail",
-          detail: "Personal",
-          content: "vankata_kk@abv.bg",
-        },
-        {
-          type: "mail",
-          detail: "Personal",
-          content: "vankata_we12@gmail.com",
-        },
-        {
-          type: "mail",
-          detail: "Personal",
-          content: "XXivanchoXX@abv.bg",
-        },
-        {
-          type: "mail",
-          detail: "Personal",
-          content: "vanio_99@gmail.com",
-        },
-        {
-          type: "mail",
-          detail: "Personal",
-          content: "ivan.i@protonmail.com",
-        },
-        {
-          type: "mail",
-          detail: "Work",
-          content: "ivan.ivanov@sofia-uni.bg",
-        },
-      ],
-    },
-    info: {
-      birthday: [
-        {
-          type: "cake",
-          detail: "Birthday",
-          content: "12.03.2002",
-        },
-      ],
-      relationship: [
-        {
-          type: "workspaces",
-          detail: "Relationship",
-          content: "Brother",
-        },
-      ],
-      nickname: [
-        {
-          type: "person",
-          detail: "Nickname",
-          content: "The One",
-        },
-      ],
-    },
-    tags: ["Family", "Friends"],
-  },
-  {
-    id: 2,
-    avatar: "https://i.pravatar.cc/1200?u=118866",
-    name: "Kristina Koleva",
-    details: {
-      phone: [
-        {
-          type: "phone",
-          detail: "Home",
-          content: "+359892531425",
-        },
-      ],
-    },
-    info: {
-      anniversary: [
-        {
-          type: "event",
-          detail: "Anniversary",
-          content: "20.06.2019",
-        },
-      ],
-    },
-    tags: ["Family", "Friends"],
-  },
-  {
-    id: 3,
-    avatar: "https://i.pravatar.cc/1200?u=114836",
-    name: "Georgi Ivanov",
-    details: {
-      phone: [
-        {
-          type: "phone",
-          detail: "Home",
-          content: "+359892531425",
-        },
-      ],
-    },
-    info: {},
-    tags: ["Close Friends", "Classmate"],
-  },
-  {
-    id: 1,
-    avatar: "https://i.pravatar.cc/1200?u=118836",
-    name: "Ivan Ivanov",
-    details: {
-      phone: [
-        {
-          type: "phone",
-          detail: "Home",
-          content: "+359892532378",
-        },
-        {
-          type: "phone",
-          detail: "Work",
-          content: "+359896218726",
-        },
-      ],
-      mail: [
-        {
-          type: "mail",
-          detail: "Personal",
-          content: "vankata_kk@abv.bg",
-        },
-        {
-          type: "mail",
-          detail: "Personal",
-          content: "vankata_we12@gmail.com",
-        },
-        {
-          type: "mail",
-          detail: "Personal",
-          content: "XXivanchoXX@abv.bg",
-        },
-        {
-          type: "mail",
-          detail: "Personal",
-          content: "vanio_99@gmail.com",
-        },
-        {
-          type: "mail",
-          detail: "Personal",
-          content: "ivan.i@protonmail.com",
-        },
-        {
-          type: "mail",
-          detail: "Work",
-          content: "ivan.ivanov@sofia-uni.bg",
-        },
-      ],
-    },
-    info: {
-      birthday: [
-        {
-          type: "cake",
-          detail: "Birthday",
-          content: "12.03.2002",
-        },
-      ],
-      relationship: [
-        {
-          type: "workspaces",
-          detail: "Relationship",
-          content: "Brother",
-        },
-      ],
-      nickname: [
-        {
-          type: "person",
-          detail: "Nickname",
-          content: "The One",
-        },
-      ],
-    },
-    tags: ["Family", "Friends"],
-  },
-  {
-    id: 2,
-    avatar: "https://i.pravatar.cc/1200?u=118866",
-    name: "Kristina Koleva",
-    details: {
-      phone: [
-        {
-          type: "phone",
-          detail: "Home",
-          content: "+359892531425",
-        },
-      ],
-    },
-    info: {
-      anniversary: [
-        {
-          type: "event",
-          detail: "Anniversary",
-          content: "20.06.2019",
-        },
-      ],
-    },
-    tags: ["Family", "Friends"],
-  },
-  {
-    id: 3,
-    avatar: "https://i.pravatar.cc/1200?u=114836",
-    name: "Georgi Ivanov",
-    details: {
-      phone: [
-        {
-          type: "phone",
-          detail: "Home",
-          content: "+359892531425",
-        },
-      ],
-    },
-    info: {},
-    tags: ["Close Friends", "Classmate"],
-  },
+  }
 ];
 
+contactsList = contactsList.sort((a, b) => 
+          `${a.name.first} ${a.name.second}`.localeCompare(
+          `${b.name.first} ${b.name.second}`));
+
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [newTagPopup, setNewTagPopup] = useState(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(true);
   const [contacts, setContacts] = useState(contactsList);
   const [selectedContact, setSelectedContact] = useState(null);
+  
+  const [newTagPopup, setNewTagPopup] = useState(false);
+
+  const [contactPopup, setContactPopup] = useState(false);
+  const [shouldEditContact, setShouldEditContact] = useState(false);
+
+  function handleContactAdd(contact) {
+    setContacts(contacts => {
+      const newContacts = [...contacts, contact];
+      return newContacts.sort((a, b) => 
+        `${a.name.first} ${a.name.second}`.localeCompare(
+        `${b.name.first} ${b.name.second}`));
+    });
+
+    setSelectedContact(contact);
+  }
 
   function handleContactEdit(contact) {
-    const newContacts = [...contacts];
-    const contactIndex = newContacts.findIndex((c) => c.id === contact.id);
+    setContacts(contacts => {
+      const newContacts = [...contacts];
+      const contactIndex = newContacts.findIndex((c) => c.id === contact.id);
 
-    if (contactIndex === -1) return;
+      if (contactIndex === -1) return;
 
-    newContacts[contactIndex] = contact;
-    setContacts(newContacts);
+      newContacts[contactIndex] = contact;
+      return newContacts;
+    });
+
     setSelectedContact(contact);
+    setShouldEditContact(false);
+  }
+
+  function handleContactDelete(contactId) {
+    setContacts(contacts => contacts.filter(({id}) => id !== contactId))
+  }
+
+  function handleEditContactPrompt(status) {
+    setContactPopup(status);
+    setShouldEditContact(status);
   }
 
   const isOnBigScreen = useMediaQuery({ query: "(max-width: 1028px)" });
@@ -402,13 +213,19 @@ function App() {
       : isOnBigScreen ? 20
       : 20;
 
-  return <NewContactPopup></NewContactPopup>
-
   if (!isLoggedIn)
     return <UserAccess onFinish={setIsLoggedIn}/>
 
   return (
     <>
+      {contactPopup && (
+        <ContactPopup
+          contact={shouldEditContact && selectedContact}
+          onAddContact={handleContactAdd}
+          onEditContact={handleContactEdit}
+          onSetPopup={setContactPopup}
+        />
+      )}
       {newTagPopup && (
         <NewTagPopup
           selectedContact={selectedContact}
@@ -432,7 +249,6 @@ function App() {
           <NavGroup className="tag-nav-group" title="Tags">
             <NavItem icon="new_label">Add Tag</NavItem>
             <NavItem icon="label">Family</NavItem>
-
           </NavGroup>
           <NavGroup className="settings-nav-group" showHorizBorder={false}>
             <NavItem icon="manage_accounts" fill={true} size={28} />
@@ -444,7 +260,11 @@ function App() {
           {selectedContact ? (
             !isOnSmallScreen && (
               <VerticalContacts>
-                <Search size={vertSearch} className="search-area vert-search-area " />
+                <Search
+                  size={vertSearch}
+                  className="search-area vert-search-area "
+                  onSelectCreateContact={setContactPopup}
+                />
                 <VerticalContactsList
                   contacts={contacts}
                   selectedContact={selectedContact}
@@ -457,6 +277,7 @@ function App() {
               <Search
                 size={gridSearch}
                 className="search-area grid-search-area"
+                onSelectCreateContact={setContactPopup}
               />
               <GridContactsList
                 contacts={contacts}
@@ -470,6 +291,8 @@ function App() {
               onSetPopup={setNewTagPopup}
               onContactEdit={handleContactEdit}
               onSelectContact={setSelectedContact}
+              onEditContact={handleEditContactPrompt}
+              onDeleteContact={handleContactDelete}
             />
           )}
         </Main>

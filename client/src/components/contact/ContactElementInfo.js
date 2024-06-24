@@ -5,6 +5,7 @@ export function ContactElementInfo({ data }) {
     <>
       {data.map((element, idx) => (
         <ContactElement
+          key={idx}
           icon={idx === 0 ? element.type : ""}
           detail={element.detail}
         >
