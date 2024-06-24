@@ -6,6 +6,7 @@ import { Avatar } from "../../Avatar";
 
 import "../prompts.css"
 import "./contact-popup.css"
+import { fetchData } from "../../../services/FetchData";
 
 function ContactElementBreak() {
     return <div style={{ margin: "10px 0" }} />;
@@ -100,7 +101,7 @@ const requirementStarStyle = {
 }
 
 export function ContactPopup({ contact, onAddContact, onEditContact, onSetPopup }) {
-    const [selectedAvatar, setSelectedAvatar] = useState("");
+    const [selectedAvatar, setSelectedAvatar] = useState(null);
 
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
@@ -117,7 +118,7 @@ export function ContactPopup({ contact, onAddContact, onEditContact, onSetPopup 
     const [relationship, setRelationship] = useState("");
     const [nickname, setNickname] = useState("");
 
-    const [tags, setTags] = useState("");
+    const [tags, setTags] = useState([]);
 
     // Fill exisitng contact info
     useEffect(() => {
@@ -257,9 +258,9 @@ export function ContactPopup({ contact, onAddContact, onEditContact, onSetPopup 
       }
       
       if (contact) {
-        onEditContact(newContact);
-      } else {
-        onAddContact(newContact);
+          onEditContact(newContact);
+        } else {
+          onAddContact(newContact);
       }
 
       onSetPopup(false);
@@ -268,7 +269,7 @@ export function ContactPopup({ contact, onAddContact, onEditContact, onSetPopup 
     return (
       <section className="background" onClick={() => onSetPopup(false)}>
         <section className="prompt" onClick={(e) => e.stopPropagation()}>
-          <h4 class="prompt-header">{`${contact ? "Edit" : "Create"} a contact`}</h4>
+          <h4 className="prompt-header">{`${contact ? "Edit" : "Create"} a contact`}</h4>
           <label className="file-upload" htmlFor="avatar-upload">
             <Avatar src={selectedAvatar || null} alt="ProfilePicture"/>
             <span className="pure-button" onClick={null} style={{marginTop: "6px"}}>Choose a photo</span>
@@ -290,6 +291,7 @@ export function ContactPopup({ contact, onAddContact, onEditContact, onSetPopup 
 
           {Array.from(phones).map(([key, value]) => (
             <ContactInputCluster
+              key={key}
               id={key}
               icon="phone"
               placeholder="Phone Number"
@@ -304,6 +306,7 @@ export function ContactPopup({ contact, onAddContact, onEditContact, onSetPopup 
 
           {Array.from(emails).map(([key, value]) => (
             <ContactInputCluster
+              key={key}
               id={key}
               icon="email"
               placeholder="Email"
@@ -318,6 +321,7 @@ export function ContactPopup({ contact, onAddContact, onEditContact, onSetPopup 
 
           {Array.from(dates).map(([key, value]) => (
             <ContactInputCluster
+              key={key}
               id={key}
               type="date"
               icon={value.type}
@@ -335,7 +339,7 @@ export function ContactPopup({ contact, onAddContact, onEditContact, onSetPopup 
           <ContactElementBreak />
           <ContactInput icon="person" value={nickname} placeholder="Nickname" onChange={(e) => setNickname(e.target.value)}/>
 
-          <div class="button-layout">
+          <div className="button-layout">
             <Button onClick={handleCreateContact}>Save</Button>
             <Button onClick={() => onSetPopup(false)}>Cancel</Button>
           </div>

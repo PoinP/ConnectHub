@@ -1,4 +1,5 @@
 const express = require('express');
+const uniqid = require('uniqid'); 
 const cors = require('cors');
 
 const app = express();
@@ -7,7 +8,137 @@ const port = 8080;
 app.use(cors());
 app.use(express.json())
 
-contacts = [];
+const contactsRaw = [
+  {
+    id: 1,
+    avatar: "https://i.pravatar.cc/1200?u=118836",
+    isFavorite: true,
+    name: {
+      first: "Ivan",
+      last: "Ivanov",
+    },
+    details: {
+      phone: [
+        {
+          type: "phone",
+          detail: "Home",
+          content: "+359892532378",
+        },
+        {
+          type: "phone",
+          detail: "Work",
+          content: "+359896218726",
+        },
+      ],
+      mail: [
+        {
+          type: "mail",
+          detail: "Personal",
+          content: "vankata_kk@abv.bg",
+        },
+        {
+          type: "mail",
+          detail: "Personal",
+          content: "vankata_we12@gmail.com",
+        },
+        {
+          type: "mail",
+          detail: "Personal",
+          content: "XXivanchoXX@abv.bg",
+        },
+        {
+          type: "mail",
+          detail: "Personal",
+          content: "vanio_99@gmail.com",
+        },
+        {
+          type: "mail",
+          detail: "Personal",
+          content: "ivan.i@protonmail.com",
+        },
+        {
+          type: "mail",
+          detail: "Work",
+          content: "ivan.ivanov@sofia-uni.bg",
+        },
+      ],
+    },
+    info: {
+      date: [
+        {
+          type: "cake",
+          detail: "Birthday",
+          content: "2002-03-12",
+        },
+      ],
+      relationship: [
+        {
+          type: "workspaces",
+          detail: "Relationship",
+          content: "Brother",
+        },
+      ],
+      nickname: [
+        {
+          type: "person",
+          detail: "Nickname",
+          content: "The One",
+        },
+      ],
+    },
+    tags: ["Family", "Friends"],
+  },
+  {
+    id: 2,
+    avatar: "https://i.pravatar.cc/1200?u=118866",
+    isFavorite: false,
+    name: {
+      first: "Kristina",
+      last: "Koleva",
+    },
+    details: {
+      phone: [
+        {
+          type: "phone",
+          detail: "Home",
+          content: "+359892531425",
+        },
+      ],
+    },
+    info: {
+      date: [
+        {
+          type: "event",
+          detail: "Anniversary",
+          content: "2019-06-20",
+        },
+      ],
+    },
+    tags: ["Family", "Friends"],
+  },
+  {
+    id: 3,
+    avatar: "https://i.pravatar.cc/1200?u=114836",
+    isFavorite: true,
+    name: {
+      first: "Georgi",
+      last: "Ivanov",
+    },
+    details: {
+      phone: [
+        {
+          type: "phone",
+          detail: "Home",
+          content: "+359892531425",
+        },
+      ],
+    },
+    info: {},
+    tags: ["Close Friends", "Classmate"],
+  },
+];
+
+let contacts = sortContacts(contactsRaw);
 
 function formatNumber(number) {
     let plusFlag = false;
@@ -36,35 +167,49 @@ function formatNumber(number) {
     return formattedNumber;
 }
 
-app.post('/save-contact', (req, res) => {
+function sortContacts(contacts) {
+  return contacts.sort((a, b) => 
+    `${a.name.first} ${a.name.second}`.localeCompare(
+    `${b.name.first} ${b.name.second}`));
+}
+
+app.get('/contact', (res, req) => {
+  const {id} = req;
+  const foundContact = contacts.find(contact => contact.id === id);
+
+  if (!foundContact) {
+    res.status(404).send(`A user with an id of ${id} can not be found!`);
+    return;
+  }
+
+  res.status(200).send(JSON.stringify(foundContact));
+})
+
+app.post('/contact', (req, res) => {
     const {_, avatar, name, details, info, tags} = req.body;
 
-    if (!avatar || !name || !details || !info || !tags) {
+    if (!name || !details || !info || !tags) {
         res.status(400).send(`One of the following is missing "avatar, name, details, info, tags"...`);
         return;
     }
+
     if (!details.phone || details.phone.length == 0) {
         res.status(400).send(`No phone number(s) provided"...`);
         return;
     }
 
-    details.phone.forEach((number) => {
-        const formattedNumber = formatNumber(number.content);
-        if (!formattedNumber) {
-            res.status(400).send(`Number (${number.content}) is in wrong format...`);
-            return;
-        }
-        number.content = formattedNumber;
-    })
+    const generatedId = uniqid();
+    const newContact = {id: generatedId, ...req.body}
 
-    contacts.push({id: (contacts.length + 1), avatar, name, details, info, tags}); // TODO: DB
-    res.status(200).send(`Contact ${name.first} ${name.last} added successfully`);
+    contacts.push(newContact); // TODO: DB
+    contacts = sortContacts(contacts);
+    res.status(200).send(JSON.stringify(newContact));
 })
 
-app.put('/edit-contact', (req, res) => {
+app.put('/contact', (req, res) => {
     const {id, avatar, name, details, info, tags} = req.body
 
-    if (!id|| !avatar || !name || !details || !info || !tags) {
+    if (!id|| !name || !details || !info || !tags) {
         res.status(400).send(`One of the following is missing "id, avatar, name, details, info, tags"...`);
         return;
     }
@@ -74,18 +219,9 @@ app.put('/edit-contact', (req, res) => {
         return;
     }
 
-    details.phone.forEach((number) => {
-        const formattedNumber = formatNumber(number.content);
-        if (!formattedNumber) {
-            res.status(400).send(`Number (${number.content}) is in wrong format...`);
-            return;
-        }
-        number.content = formattedNumber;
-    })
-
     for (let i = 0; i < contacts.length; i++) {
         if (contacts[i].id === id) {
-            contacts[i] = {id, avatar, name, details, info, tags}
+            contacts[i] = req.body;
             res.status(200).send(`Updated contact (${name.first} ${name.last})`)
             return;
         }
@@ -93,7 +229,7 @@ app.put('/edit-contact', (req, res) => {
     res.status(400).send(`No contact with id ${id} was found...`)
 })
 
-app.delete('/delete-contact', (req, res) => {
+app.delete('/contact', (req, res) => {
     const {id} = req.body;
     
     if (id === null) {
@@ -101,18 +237,16 @@ app.delete('/delete-contact', (req, res) => {
         return;
     }
 
-    oldLength = contacts.length;
     contacts = contacts.filter(value => value.id != id);
-    if (contacts.length == oldLength) {
-        res.status(400).send(`No contact with id ${id} was found`)
-        return;
-    }
-
     res.status(200).send(`Contact with id ${id} was deleted successfully`);
 })
 
 app.get('/contacts', (req, res) => {
     res.status(200).json(contacts);
+})
+
+app.get("/favorite-contacts", (req, res) => {
+    res.status(200).json(contacts.filter(contact => contact.isFavorite));
 })
 
 app.listen(port, () => {

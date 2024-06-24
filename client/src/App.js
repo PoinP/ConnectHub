@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useMediaQuery } from "react-responsive";
 import { Search } from "./components/Search.js";
 
@@ -18,146 +18,13 @@ import { NavGroup } from "./components/navigation/NavGroup.js";
 import { NavItem } from "./components/navigation/NavItem.js";
 import { UserAccess } from "./components/user-access/UserAcess.js";
 import { ContactPopup } from "./components/prompts/contact-popup/ContactPopup.js";
+import { fetchData } from "./services/FetchData.js";
 
-export let contactsList = [
-  {
-    id: 1,
-    avatar: "https://i.pravatar.cc/1200?u=118836",
-    isFavorite: true,
-    name: {
-      first: "Ivan",
-      last: "Ivanov"
-    },
-    details: {
-      phone: [
-        {
-          type: "phone",
-          detail: "Home",
-          content: "+359892532378",
-        },
-        {
-          type: "phone",
-          detail: "Work",
-          content: "+359896218726",
-        },
-      ],
-      mail: [
-        {
-          type: "mail",
-          detail: "Personal",
-          content: "vankata_kk@abv.bg",
-        },
-        {
-          type: "mail",
-          detail: "Personal",
-          content: "vankata_we12@gmail.com",
-        },
-        {
-          type: "mail",
-          detail: "Personal",
-          content: "XXivanchoXX@abv.bg",
-        },
-        {
-          type: "mail",
-          detail: "Personal",
-          content: "vanio_99@gmail.com",
-        },
-        {
-          type: "mail",
-          detail: "Personal",
-          content: "ivan.i@protonmail.com",
-        },
-        {
-          type: "mail",
-          detail: "Work",
-          content: "ivan.ivanov@sofia-uni.bg",
-        },
-      ],
-    },
-    info: {
-      date: [
-        {
-          type: "cake",
-          detail: "Birthday",
-          content: "2002-03-12",
-        },
-      ],
-      relationship: [
-        {
-          type: "workspaces",
-          detail: "Relationship",
-          content: "Brother",
-        },
-      ],
-      nickname: [
-        {
-          type: "person",
-          detail: "Nickname",
-          content: "The One",
-        },
-      ],
-    },
-    tags: ["Family", "Friends"],
-  },
-  {
-    id: 2,
-    avatar: "https://i.pravatar.cc/1200?u=118866",
-    isFavorite: false,
-    name: {
-      first: "Kristina",
-      last: "Koleva"
-    },
-    details: {
-      phone: [
-        {
-          type: "phone",
-          detail: "Home",
-          content: "+359892531425",
-        },
-      ],
-    },
-    info: {
-      date: [
-        {
-          type: "event",
-          detail: "Anniversary",
-          content: "2019-06-20",
-        },
-      ],
-    },
-    tags: ["Family", "Friends"],
-  },
-  {
-    id: 3,
-    avatar: "https://i.pravatar.cc/1200?u=114836",
-    isFavorite: true,
-    name: {
-      first: "Georgi",
-      last: "Ivanov"
-    },
-    details: {
-      phone: [
-        {
-          type: "phone",
-          detail: "Home",
-          content: "+359892531425",
-        },
-      ],
-    },
-    info: {},
-    tags: ["Close Friends", "Classmate"],
-  }
-];
-
-contactsList = contactsList.sort((a, b) => 
-          `${a.name.first} ${a.name.second}`.localeCompare(
-          `${b.name.first} ${b.name.second}`));
-
-const favoriteContacts = contactsList.filter(contact => contact.isFavorite);
+// const favoriteContacts = contactsList.filter(contact => contact.isFavorite);
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(true);
-  const [contacts, setContacts] = useState(contactsList);
+  const [contacts, setContacts] = useState([]);
   const [selectedContact, setSelectedContact] = useState(null);
   
   const [newTagPopup, setNewTagPopup] = useState(false);
@@ -167,34 +34,66 @@ function App() {
 
   const [activeTab, setActiveTab] = useState("contacts");
 
-  function handleContactAdd(contact) {
-    setContacts(contacts => {
-      const newContacts = [...contacts, contact];
-      return newContacts.sort((a, b) => 
-        `${a.name.first} ${a.name.second}`.localeCompare(
-        `${b.name.first} ${b.name.second}`));
-    });
+  function activeContactsEndPoint() {
+    if (activeTab === "favorites")
+      return "favorite-contacts";
+    
+    return "contacts";
+  }
 
-    setSelectedContact(contact);
+  function handleContactAdd(contact) {
+    fetchData("contact", "POST", contact)
+      .then(() => {
+        fetchData(activeContactsEndPoint())
+          .then((res) => res.json())
+          .then((contacts) => {
+            setContacts(contacts);
+            setSelectedContact(contact);
+          })
+          .catch((err) => console.log("Couldn't fetch contacts!", err));
+      })
+      .catch((err) => console.log("Couldn't add a new contact!", err)); //TODO ErrorPage?
   }
 
   function handleContactEdit(contact) {
-    setContacts(contacts => {
-      const newContacts = [...contacts];
-      const contactIndex = newContacts.findIndex((c) => c.id === contact.id);
+    fetchData("contact", "PUT", contact)
+      .then(() => {
+        fetchData(activeContactsEndPoint(), "GET")
+          .then((res) => res.json())
+          .then((contacts) => {
+            setContacts(contacts);
+            setSelectedContact(contact);
+            setShouldEditContact(false);
+          });
 
-      if (contactIndex === -1) return;
+        // setContacts((contacts) => {
+        //   const newContacts = [...contacts];
+        //   const contactIndex = newContacts.findIndex((c) => c.id === contact.id);
 
-      newContacts[contactIndex] = contact;
-      setSelectedContact(contact);
-      setShouldEditContact(false);
-      
-      return newContacts;
-    });
+        //   if (contactIndex === -1) return;
+
+        //   newContacts[contactIndex] = contact;
+        //   setSelectedContact(contact);
+        //   setShouldEditContact(false);
+
+        //   return newContacts;
+        // });
+      })
+      .catch((err) => console.log("Couldn't edit contact!", err));
   }
 
   function handleContactDelete(contactId) {
-    setContacts(contacts => contacts.filter(({id}) => id !== contactId))
+    fetchData("contact", "DELETE", { id: contactId })
+      .then(() => {
+        fetchData(activeContactsEndPoint(), "GET")
+          .then((res) => res.json())
+          .then((contacts) => {
+            setContacts(contacts);
+            setSelectedContact(null);
+          })
+          .catch((err) => console.log("Couldn't fetch contacts!", err));
+      })
+      .catch((err) => console.log("Couldn't delete contact", err));
   }
 
   function handleEditContactPrompt(status) {
@@ -202,16 +101,30 @@ function App() {
     setShouldEditContact(status);
   }
 
-  function handleSelectContacts() {
-    setContacts(contactsList);
-    setSelectedContact(null);
-    setActiveTab("contacts");
+  function handleSelectContactsTab() {
+    fetchData("contacts", "GET")
+      .then((res) => res.json())
+      .then((contacts) => {
+        setContacts(contacts);
+        setSelectedContact(null);
+        setActiveTab("contacts");
+      })
+      .catch((err) =>
+        console.log("There was an error fetching contatcts!", err)
+      );
   }
 
-  function handleSelectFavorites() {
-    setContacts(favoriteContacts);
-    setSelectedContact(null);
-    setActiveTab("favorites");
+  function handleSelectFavoritesTab() {
+    fetchData("favorite-contacts", "GET")
+      .then((res) => res.json())
+      .then((contacts) => {
+        setContacts(contacts);
+        setSelectedContact(null);
+        setActiveTab("favorites");
+      })
+      .catch((err) =>
+        console.log("There was an error fetching contatcts!", err)
+      );
   }
 
   function handleFavoriteContact(contact) {
@@ -235,6 +148,13 @@ function App() {
       : isOnMediumScreen ? 15
       : isOnBigScreen ? 20
       : 20;
+
+  useEffect(() => {
+    fetchData(activeContactsEndPoint(), "GET")
+    .then(res => res.json())
+    .then(contacts => setContacts(contacts))
+    .catch(err => console.log("Couldn't fetch contacts: ", err)) //TODO Error pages!
+  }, []);
 
   if (!isLoggedIn)
     return <UserAccess onFinish={setIsLoggedIn}/>
@@ -264,13 +184,13 @@ function App() {
               icon="account_circle"
               size={58}
               isActive={activeTab === "contacts"}
-              onClick={handleSelectContacts}
+              onClick={handleSelectContactsTab}
             />
             <NavItem
               icon="stars"
               size={58}
               isActive={activeTab === "favorites"}
-              onClick={handleSelectFavorites}
+              onClick={handleSelectFavoritesTab}
             />
             <NavItem icon="build_circle" size={58} />
             <NavItem icon="delete_history" size={58} />

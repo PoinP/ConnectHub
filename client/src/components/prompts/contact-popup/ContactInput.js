@@ -13,7 +13,7 @@ export function ContactInput({
   return (
     <section style={style} className={`contact-input-container ${className}`}>
       <MaterialSymbol style={materialStyle} icon={icon} size={size} />
-      <input class="contact-input" value={value} type={type} placeholder={placeholder} onChange={onChange}/>
+      <input className="contact-input" value={value} type={type} placeholder={placeholder} onChange={onChange}/>
       {children}
     </section>
   );
