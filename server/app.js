@@ -5,8 +5,9 @@ const app = express();
 const port = 8080;
 
 app.use(cors());
+app.use(express.json())
 
-contacts = [{name: "Ivan", number: "08962312323"}];
+contacts = [];
 
 function formatNumber(number) {
     let plusFlag = false;
@@ -35,69 +36,79 @@ function formatNumber(number) {
     return formattedNumber;
 }
 
-app.use(express.json())
-
 app.post('/save-contact', (req, res) => {
-    const {name, number} = req.body;
-    if (!name || !number) {
-        res.status(400).send(`Name and number are required...`);
+    const {_, avatar, name, details, info, tags} = req.body;
+
+    if (!avatar || !name || !details || !info || !tags) {
+        res.status(400).send(`One of the following are missing "avatar, name, details, info, tags"...`);
         return;
     }
-    const formattedNumber = formatNumber(number);
-    if (!formattedNumber) {
-        res.status(400).send(`Number (${number}) is in wrong format...`);
+    if (!details.phone || details.phone.length == 0) {
+        res.status(400).send(`No phone number(s) provided"...`);
         return;
     }
 
-    contacts.push( {name, "number": formattedNumber} );
-    res.status(200).send(`Contact ${name} (${formattedNumber}) added successfully`);
+    details.phone.forEach((number) => {
+        const formattedNumber = formatNumber(number.content);
+        if (!formattedNumber) {
+            res.status(400).send(`Number (${number.content}) is in wrong format...`);
+            return;
+        }
+        number.content = formattedNumber;
+    })
+
+    contacts.push({id: (contacts.length + 1), avatar, name, details, info, tags}); // TODO: DB
+    res.status(200).send(`Contact ${name} added successfully`);
 })
 
 app.put('/edit-contact', (req, res) => {
-    const {oldName, oldNumber, newName, newNumber} = req.body;
-    if (!oldName || !oldNumber || !newName || !newNumber) {
-        res.status(400).send(`oldName, oldNumber, newName and newNumber are required...`);
-        return;   
-    }
+    const {id, avatar, name, details, info, tags} = req.body
 
-    const formattedOldNumber = formatNumber(oldNumber);
-    if (!formattedOldNumber) {
-        res.status(400).send(`Old number (${number}) is in wrong format...`);
+    if (!id|| !avatar || !name || !details || !info || !tags) {
+        res.status(400).send(`One of the following are missing "avatar, name, details, info, tags"...`);
         return;
     }
 
-    const formattedNewNumber = formatNumber(newNumber);
-    if (!formattedNewNumber) {
-        res.status(400).send(`New number (${number}) is in wrong format...`);
+    if (!details.phone || details.phone.length == 0) {
+        res.status(400).send(`No phone number(s) provided"...`);
         return;
     }
+
+    details.phone.forEach((number) => {
+        const formattedNumber = formatNumber(number.content);
+        if (!formattedNumber) {
+            res.status(400).send(`Number (${number.content}) is in wrong format...`);
+            return;
+        }
+        number.content = formattedNumber;
+    })
 
     for (let i = 0; i < contacts.length; i++) {
-        if (contacts[i]["name"] === oldName && contacts[i]["number"] === formattedOldNumber) {
-            contacts[i]["name"] = newName;
-            contacts[i]["number"] = formattedNewNumber;
-            res.status(200).send(`Updated contact ${oldName} (${formattedOldNumber}) to ${newName} (${formattedNewNumber})`)
+        if (contacts[i].id === id) {
+            contacts[i] = {id, avatar, name, details, info, tags}
+            res.status(200).send(`Updated contact (${name})`)
             return;
         }
     }
-    res.status(400).send(`No contact ${oldName} (${formattedOldNumber}) was found...`)
+    res.status(400).send(`No contact with id ${id} was found...`)
 })
 
 app.delete('/delete-contact', (req, res) => {
-    const {name, number} = req.body;
-    if (!name || !number) {
-        res.status(400).send(`Name and number are required...`);
+    const {id} = req.body;
+    
+    if (!id) {
+        res.status(400).send(`id is required...`);
         return;
     }
 
-    const formattedNumber = formatNumber(number);
-    if (!formattedNumber) {
-        res.status(400).send(`Number (${number}) is in wrong format...`);
+    oldLength = contacts.length;
+    contacts = contacts.filter(value => value.id != id);
+    if (contacts.length == oldLength) {
+        res.status(400).send(`No contact with id ${id} was found`)
         return;
     }
 
-    contacts = contacts.filter(value => value["name"] != name && value["number"] != formattedNumber);
-    res.status(200).send(`Contact ${name} (${formattedNumber}) deleted successfully`);
+    res.status(200).send(`Contact with id ${id} was deleted successfully`);
 })
 
 app.get('/contacts', (req, res) => {
