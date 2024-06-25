@@ -6,7 +6,6 @@ import { Avatar } from "../../Avatar";
 
 import "../prompts.css"
 import "./contact-popup.css"
-import { fetchData } from "../../../services/FetchData";
 
 function ContactElementBreak() {
     return <div style={{ margin: "10px 0" }} />;
@@ -101,7 +100,8 @@ const requirementStarStyle = {
 }
 
 export function ContactPopup({ contact, onAddContact, onEditContact, onSetPopup }) {
-    const [selectedAvatar, setSelectedAvatar] = useState(null);
+    const [selectedAvatarUrl, setSelectedAvatarUrl] = useState(null);
+    const [selectedAvatarBlob, setSelectedAvatarBlob] = useState(null);
 
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
@@ -127,7 +127,7 @@ export function ContactPopup({ contact, onAddContact, onEditContact, onSetPopup 
 
       const { avatar, name, details, info, tags } = contact;
 
-      setSelectedAvatar(avatar);
+      setSelectedAvatarUrl(avatar);
 
       setFirstName(name.first);
       setLastName(name.last);
@@ -202,19 +202,21 @@ export function ContactPopup({ contact, onAddContact, onEditContact, onSetPopup 
 
     function handleSelectAvatar(e) {
       const avatarBlob = e.target.files[0];
-      setSelectedAvatar(avatar => avatarBlob ? URL.createObjectURL(avatarBlob) : avatar);
+      setSelectedAvatarBlob(avatarBlob);
+      setSelectedAvatarUrl(avatar => avatarBlob ? URL.createObjectURL(avatarBlob) : avatar);
     }
 
     function handleCreateContact() {
       if (!firstName || !lastName || !hasContent(phones)) return;
 
       const newContact = {
-        id: contact ? contact.id : -1,
-        avatar: selectedAvatar,
+        id: contact ? contact.id : null,
         name: {
           first: firstName,
           last: lastName
         },
+        avatar: selectedAvatarUrl,
+        isFavoritte: false,
         details: {
           phone:
             Array.from(phones)
@@ -258,9 +260,9 @@ export function ContactPopup({ contact, onAddContact, onEditContact, onSetPopup 
       }
       
       if (contact) {
-          onEditContact(newContact);
+          onEditContact(newContact, selectedAvatarBlob);
         } else {
-          onAddContact(newContact);
+          onAddContact(newContact, selectedAvatarBlob);
       }
 
       onSetPopup(false);
@@ -271,7 +273,7 @@ export function ContactPopup({ contact, onAddContact, onEditContact, onSetPopup 
         <section className="prompt" onClick={(e) => e.stopPropagation()}>
           <h4 className="prompt-header">{`${contact ? "Edit" : "Create"} a contact`}</h4>
           <label className="file-upload" htmlFor="avatar-upload">
-            <Avatar src={selectedAvatar || null} alt="ProfilePicture"/>
+            <Avatar src={selectedAvatarUrl || null} alt="ProfilePicture"/>
             <span className="pure-button" onClick={null} style={{marginTop: "6px"}}>Choose a photo</span>
           </label>
           <input id="avatar-upload" type="file" accept="image/png, image/jpeg, image/gif" onChange={handleSelectAvatar} />

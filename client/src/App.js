@@ -18,9 +18,7 @@ import { NavGroup } from "./components/navigation/NavGroup.js";
 import { NavItem } from "./components/navigation/NavItem.js";
 import { UserAccess } from "./components/user-access/UserAcess.js";
 import { ContactPopup } from "./components/prompts/contact-popup/ContactPopup.js";
-import { fetchData } from "./services/FetchData.js";
-
-// const favoriteContacts = contactsList.filter(contact => contact.isFavorite);
+import { fetchData, fetchFormData } from "./services/FetchData.js";
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(true);
@@ -37,34 +35,46 @@ function App() {
   function activeContactsEndPoint() {
     if (activeTab === "favorites")
       return "favorite-contacts";
-    
     return "contacts";
   }
 
-  function handleContactAdd(contact) {
-    fetchData("contact", "POST", contact)
-      .then(() => {
+  function handleContactAdd(contact, avatarBlob) {
+    const formData = new FormData();
+    formData.append("contact", JSON.stringify(contact));
+    formData.append("avatar", avatarBlob);
+
+    fetchFormData("contact", "POST", formData)
+      .then(res => res.json())
+      .then(contact => {
+        setSelectedContact(contact);
         fetchData(activeContactsEndPoint())
           .then((res) => res.json())
           .then((contacts) => {
             setContacts(contacts);
-            setSelectedContact(contact);
           })
           .catch((err) => console.log("Couldn't fetch contacts!", err));
       })
       .catch((err) => console.log("Couldn't add a new contact!", err)); //TODO ErrorPage?
   }
 
-  function handleContactEdit(contact) {
-    fetchData("contact", "PUT", contact)
-      .then(() => {
+  function handleContactEdit(contact, avatarBlob) {
+    const formData = new FormData();
+    formData.append("contact", JSON.stringify(contact));
+    formData.append("avatar", avatarBlob);
+
+    fetchFormData("contact", "PUT", formData)
+      .then((res) => res.json())
+      .then((contact) => {
+        setSelectedContact(contact);
         fetchData(activeContactsEndPoint(), "GET")
           .then((res) => res.json())
           .then((contacts) => {
             setContacts(contacts);
-            setSelectedContact(contact);
-            setShouldEditContact(false);
           });
+
+        setShouldEditContact(false);
+      })
+      .catch((err) => console.log("Couldn't edit contact!", err));
 
         // setContacts((contacts) => {
         //   const newContacts = [...contacts];
@@ -78,8 +88,6 @@ function App() {
 
         //   return newContacts;
         // });
-      })
-      .catch((err) => console.log("Couldn't edit contact!", err));
   }
 
   function handleContactDelete(contactId) {
@@ -150,11 +158,17 @@ function App() {
       : 20;
 
   useEffect(() => {
+    function activeContactsEndPoint() {
+      if (activeTab === "favorites")
+        return "favorite-contacts";
+      return "contacts";
+    }
+
     fetchData(activeContactsEndPoint(), "GET")
     .then(res => res.json())
     .then(contacts => setContacts(contacts))
     .catch(err => console.log("Couldn't fetch contacts: ", err)) //TODO Error pages!
-  }, []);
+  }, [activeTab]);
 
   if (!isLoggedIn)
     return <UserAccess onFinish={setIsLoggedIn}/>
