@@ -9,7 +9,7 @@
     min-width: 100px;
     height: 100%;
     box-sizing: content-box;
-    margin-top: 1.5rem;
+    padding-top: 1.5rem;
     padding: 0.5rem;
   
     display: flex;

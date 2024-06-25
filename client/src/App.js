@@ -157,7 +157,10 @@ function App() {
       return;
     }
 
-    fetchQueryData("search", "GET", { query })
+    const objQuery = { query, favorites: activeTab === "favorites" };
+    console.log(objQuery);
+
+    fetchQueryData("search", "GET", objQuery)
     .then(res => res.json())
     .then(contacts => {
       setContacts(contacts);
@@ -241,7 +244,7 @@ function App() {
           </NavGroup>
           <NavGroup className="settings-nav-group" showHorizBorder={false}>
             <NavItem icon="manage_accounts" fill={true} size={28} />
-            <NavItem icon="logout" fill={true} size={28} />
+            <NavItem icon="logout" fill={true} size={28} onClick={() => setIsLoggedIn(false)} />
             <NavItem icon="settings" fill={true} size={28} />
           </NavGroup>
         </NavBar>
@@ -292,29 +295,5 @@ function App() {
     </>
   );
 }
-
-
-
-//Todo
-// function ContactLabels() {
-//   const topStyle = {
-//     marginBottom: 0
-//   };
-
-//   const botStyle = {
-//     marginTop: 0
-//   };
-
-//   return (
-//     <div className="contact-sub-details">
-//     <ContactElement icon="note" style={topStyle}>
-//       <button className="pure-button">
-//         Add a note
-//       </button>
-//     </ContactElement>
-//     <textarea rows={4} cols={40} className="search-input"></textarea>
-//     </div>
-//   )
-// }
 
 export default App;

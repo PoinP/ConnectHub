@@ -1,5 +1,4 @@
 import { MaterialButton } from "../MaterialButton";
-import { fetchData } from "../../services/FetchData";
 
 export function ContactActions({ size = 38, contact, onFavoriteContact, onSelectContact, onEditContact, onDeleteContact }) {
   function handleDeleteContact() {
