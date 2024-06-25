@@ -42,7 +42,7 @@ function createContact(req, res) {
 
   contacts.push(newContact); // TODO: DB
   contacts = sortContacts(contacts);
-  res.status(200).send(JSON.stringify(newContact));
+  res.status(200).json(newContact);
 }
 
 function updateContact(req, res) {

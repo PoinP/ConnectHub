@@ -5,6 +5,7 @@ const mongoose = require('mongoose');
 
 const bodyParser = require('body-parser');
 const contactRouter = require('./routes/Contact.js');
+const searchRouter = require('./routes/Search.js');
 
 const app = express();
 const port = 8080;
@@ -17,6 +18,7 @@ app.use(express.static('avatars'))
 
 // Routes
 app.use("/", contactRouter);
+app.use("/", searchRouter);
 
 // Serever startup
 

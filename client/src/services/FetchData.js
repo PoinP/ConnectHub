@@ -14,3 +14,16 @@ export function fetchFormData(endPoint, method, formData) {
     body: formData,
   });
 }
+
+export function fetchQueryData(endPoint, method, queryData) {
+  const parameters = [];
+  for (const prop in queryData) {
+    parameters.push(`${prop}=${encodeURIComponent(queryData[prop])}`);
+  }
+
+  const query = parameters.join("&");
+  return fetch(`http://localhost:8080/${endPoint}?${query}`, {
+    method,
+    mode: "cors",
+  });
+}

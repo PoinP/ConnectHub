@@ -69,6 +69,19 @@
     "tags": ["Family", "Friends"]
   },
   {
+    "id": 4,
+    "avatar": "https://i.pravatar.cc/1200?u=114836",
+    "isFavorite": true,
+    "name": { "first": "Ivan", "last": "Zafirov" },
+    "details": {
+      "phone": [
+        { "type": "phone", "detail": "Home", "content": "+359892531425" }
+      ]
+    },
+    "info": {},
+    "tags": ["Close Friends", "Classmate"]
+  },
+  {
     "id": 2,
     "avatar": "https://i.pravatar.cc/1200?u=118866",
     "isFavorite": false,
