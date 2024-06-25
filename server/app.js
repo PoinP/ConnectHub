@@ -37,10 +37,10 @@ function formatNumber(number) {
 }
 
 app.post('/save-contact', (req, res) => {
-    const {_, avatar, name, details, info, tags} = req.body;
+    const {_, avatar, name, details, info, tags, isFavourite} = req.body;
 
-    if (!avatar || !name || !details || !info || !tags) {
-        res.status(400).send(`One of the following is missing "avatar, name, details, info, tags"...`);
+    if ([avatar, name, details, info, tags, isFavourite].includes(undefined)) {
+        res.status(400).send(`One of the following is missing "avatar, name, details, info, tags, isFavourite"...`);
         return;
     }
     if (!details.phone || details.phone.length == 0) {
@@ -57,15 +57,15 @@ app.post('/save-contact', (req, res) => {
         number.content = formattedNumber;
     })
 
-    contacts.push({id: (contacts.length + 1), avatar, name, details, info, tags}); // TODO: DB
+    contacts.push({id: (contacts.length + 1), avatar, name, details, info, tags, isFavourite}); // TODO: DB
     res.status(200).send(`Contact ${name.first} ${name.last} added successfully`);
 })
 
 app.put('/edit-contact', (req, res) => {
-    const {id, avatar, name, details, info, tags} = req.body
+    const {id, avatar, name, details, info, tags, isFavourite} = req.body
 
-    if (!id|| !avatar || !name || !details || !info || !tags) {
-        res.status(400).send(`One of the following is missing "id, avatar, name, details, info, tags"...`);
+    if ([id, avatar , name , details , info , tags, isFavourite].includes(undefined)) {
+        res.status(400).send(`One of the following is missing "id, avatar, name, details, info, tags, isFavourite"...`);
         return;
     }
 
@@ -85,7 +85,7 @@ app.put('/edit-contact', (req, res) => {
 
     for (let i = 0; i < contacts.length; i++) {
         if (contacts[i].id === id) {
-            contacts[i] = {id, avatar, name, details, info, tags}
+            contacts[i] = {id, avatar, name, details, info, tags, isFavourite}
             res.status(200).send(`Updated contact (${name.first} ${name.last})`)
             return;
         }
@@ -96,7 +96,7 @@ app.put('/edit-contact', (req, res) => {
 app.delete('/delete-contact', (req, res) => {
     const {id} = req.body;
     
-    if (id === null) {
+    if (id === undefined) {
         res.status(400).send(`id is required...`);
         return;
     }
