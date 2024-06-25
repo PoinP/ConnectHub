@@ -16,16 +16,21 @@ function getContactById(id) {
 
 function validateTags(contact) {
     const contactTags = contact.tags;
-    for (const label of contactTags) {
-        let foundTag = tags.find(tag => tag.label === label);
+    for (const {label, contacts} of tags) {
+        const foundIndex = contacts.findIndex(id => id === contact.id);
 
-        if (!foundTag) {
-            tags.push({label, contacts: []});
-            foundTag = tags.at(tags.length - 1);
+        if (foundIndex != -1) {
+            contacts.splice(foundIndex, 1);
         }
+    }
 
-        if (!foundTag.contacts.includes(contact.id))
-            foundTag.contacts.push(contact.id);
+    for (const tag of contactTags) {
+        for (const {label, contacts} of tags) {
+            if (tag === label) {
+                contacts.push(contact.id);
+                return;
+            }
+        }
     }
 }
 
