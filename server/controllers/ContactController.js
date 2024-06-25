@@ -1,12 +1,6 @@
 let contacts = require("../data/contacts.json");
 
-function sortContacts(contacts) {
-  return contacts.sort((a, b) =>
-    `${a.name.first} ${a.name.second}`.localeCompare(
-      `${b.name.first} ${b.name.second}`
-    )
-  );
-}
+const { sortContacts } = require("../utils/utilities");
 
 function getContact(req, res) {
   const { id } = req;
