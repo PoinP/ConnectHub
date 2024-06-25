@@ -1,6 +1,7 @@
 import { useId, useState } from "react";
 import { MaterialSymbol } from "react-material-symbols";
 import { MaterialButton } from "./MaterialButton";
+import { useDebouncedCallback } from 'use-debounce';
 
 export function Search({
   placeholder = "Search",
@@ -15,9 +16,11 @@ export function Search({
 
   const searchID = useId();
 
+  const debounced = useDebouncedCallback(onSearch, 500);
+
   function handleOnChange(e) {
     setQuery(e.target.value);
-    onSearch(e.target.value.toLowerCase());
+    debounced(e.target.value.toLowerCase());
   }
 
   return (
@@ -41,7 +44,10 @@ export function Search({
         {query && (
           <button
             className={`pure-button ${!query ? "hidden" : ""}`}
-            onClick={() => setQuery("")}
+            onClick={() => {
+              setQuery("");
+              onSearch("");
+            }}
           >
             <MaterialSymbol icon="close" size={fontSize} />
           </button>

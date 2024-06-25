@@ -36,9 +36,7 @@ function createContact(req, res) {
     : null;
 
   const generatedId = req.contactId;
-  console.log(generatedId);
   const newContact = { ...contact, id: generatedId, avatar: avatarPath };
-  console.log(newContact);
 
   contacts.push(newContact); // TODO: DB
   contacts = sortContacts(contacts);

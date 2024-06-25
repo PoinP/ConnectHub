@@ -25,9 +25,6 @@ function getUser(id) {
 function search(req, res) {
     const { query } = req.query;
     const queryResults = ps.search(query);
-    console.log(queryResults);
-    console.log(query);
-    console.log(req.query);
     const contacts = queryResults.map(result => getUser(result));
 
     return res.status(200).json(contacts);
