@@ -195,15 +195,15 @@ class PredictiveSearch {
 module.exports = PredictiveSearch;
 
 // Testing code
-const ps = new PredictiveSearch();
-ps.addData("test", 10);
-ps.addData("test", 5);
-ps.addData("testing", 10);
-ps.addData("testingss", 10);
-ps.addData("testingss we", 10);
-ps.addData("tech", 13);
-ps.print();
+// const ps = new PredictiveSearch();
+// ps.addData("test", 10);
+// ps.addData("test", 5);
+// ps.addData("testing", 10);
+// ps.addData("testingss", 10);
+// ps.addData("testingss we", 10);
+// ps.addData("tech", 13);
+// ps.print();
 
-ps.removeData(10);
-console.log(ps.search("test"));
-ps.print();
+// ps.removeData(10);
+// console.log(ps.search("test"));
+// ps.print();
