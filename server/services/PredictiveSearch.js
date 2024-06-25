@@ -49,6 +49,18 @@ class PredictiveSearch {
     currChild.data.add(data);
   }
 
+  addContact(contact) {
+    const contactId = contact.id;
+    const {first, last} = contact.name;
+    const contactName = `${first} ${last}`;
+    const contactPhone = contact.details.phone[0].content;
+
+    this.addData(first.toLowerCase(), contactId);
+    this.addData(last.toLowerCase(), contactId);
+    this.addData(contactName.toLowerCase(), contactId);
+    this.addData(contactPhone, contactId);
+  }
+
   search(string) {
     if (!string) return [];
 
@@ -67,7 +79,7 @@ class PredictiveSearch {
       return [...currChild.data];
     }
 
-    return [...this.#iterateTree(currChild)];
+    return [...new Set(this.#iterateTree(currChild))];
   }
 
   print() {

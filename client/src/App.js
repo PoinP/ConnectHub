@@ -23,6 +23,8 @@ import { fetchData, fetchFormData, fetchQueryData } from "./services/FetchData.j
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(true);
   const [contacts, setContacts] = useState([]);
+  const [tags, setTags] = useState([]);
+
   const [selectedContact, setSelectedContact] = useState(null);
   
   const [newTagPopup, setNewTagPopup] = useState(false);
@@ -31,12 +33,7 @@ function App() {
   const [shouldEditContact, setShouldEditContact] = useState(false);
 
   const [activeTab, setActiveTab] = useState("contacts");
-
-  function activeContactsEndPoint() {
-    if (activeTab === "favorites")
-      return "favorite-contacts";
-    return "contacts";
-  }
+  const [filter, setFilter] = useState(null);
 
   function handleContactAdd(contact, avatarBlob) {
     const formData = new FormData();
@@ -47,30 +44,21 @@ function App() {
       .then(res => res.json())
       .then(contact => {
         setSelectedContact(contact);
-        fetchData(activeContactsEndPoint())
-          .then((res) => res.json())
-          .then((contacts) => {
-            setContacts(contacts);
-          })
-          .catch((err) => console.log("Couldn't fetch contacts!", err));
+        loadContacts();
       })
       .catch((err) => console.log("Couldn't add a new contact!", err)); //TODO ErrorPage?
   }
 
   function handleContactEdit(contact, avatarBlob) {
     const formData = new FormData();
-    formData.append("contact", JSON.stringify(contact));
+    formData.append("contact", JSON.stringify(contact))
     formData.append("avatar", avatarBlob);
 
     fetchFormData("contact", "PUT", formData)
       .then((res) => res.json())
       .then((contact) => {
         setSelectedContact(contact);
-        fetchData(activeContactsEndPoint(), "GET")
-          .then((res) => res.json())
-          .then((contacts) => {
-            setContacts(contacts);
-          });
+        loadContacts();
 
         setShouldEditContact(false);
       })
@@ -93,13 +81,8 @@ function App() {
   function handleContactDelete(contactId) {
     fetchData("contact", "DELETE", { id: contactId })
       .then(() => {
-        fetchData(activeContactsEndPoint(), "GET")
-          .then((res) => res.json())
-          .then((contacts) => {
-            setContacts(contacts);
-            setSelectedContact(null);
-          })
-          .catch((err) => console.log("Couldn't fetch contacts!", err));
+        setSelectedContact(null)
+        loadContacts()
       })
       .catch((err) => console.log("Couldn't delete contact", err));
   }
@@ -114,30 +97,11 @@ function App() {
     setShouldEditContact(status);
   }
 
-  function handleSelectContactsTab() {
-    fetchData("contacts", "GET")
-      .then((res) => res.json())
-      .then((contacts) => {
-        setContacts(contacts);
-        setSelectedContact(null);
-        setActiveTab("contacts");
-      })
-      .catch((err) =>
-        console.log("There was an error fetching contatcts!", err)
-      );
-  }
-
-  function handleSelectFavoritesTab() {
-    fetchData("favorite-contacts", "GET")
-      .then(res => res.json())
-      .then(contacts => {
-        setContacts(contacts);
-        setSelectedContact(null);
-        setActiveTab("favorites");
-      })
-      .catch((err) =>
-        console.log("There was an error fetching contatcts!", err)
-      );
+  function handleSelectTab(tab, filter = null) {
+    setActiveTab(tab);
+    setFilter(filter);
+    setSelectedContact(null);
+    loadContacts();
   }
 
   function handleFavoriteContact(contact) {
@@ -145,10 +109,17 @@ function App() {
   }
 
   function loadContacts() {
-    fetchData(activeContactsEndPoint(), "GET")
+    fetchData(activeTab, "GET")
       .then((res) => res.json())
       .then((contacts) => setContacts(contacts))
       .catch((error) => "Error when fetching contacts...");
+  }
+
+  function loadTags() {
+    fetchData("tags", "GET")
+    .then(res => res.json())
+    .then(tags => setTags(tags))
+    .catch(err => console.log("Couldn't fetch tags!", err));
   }
 
   function handleSearch(query) {
@@ -156,9 +127,11 @@ function App() {
       loadContacts();
       return;
     }
-
-    const objQuery = { query, favorites: activeTab === "favorites" };
-    console.log(objQuery);
+    
+    const objQuery = { query };
+    if (filter) {
+      objQuery.tabFilter = filter;
+    }
 
     fetchQueryData("search", "GET", objQuery)
     .then(res => res.json())
@@ -166,6 +139,15 @@ function App() {
       setContacts(contacts);
     })
     .catch((err) => console.log("Error searching!", err))
+  }
+
+  function constructTagTab(label) {
+    return `contacts-tag?label=${label}`;
+  }
+
+  function handleCreateTag(label) {
+    fetchData("tag", "POST", { label });
+    loadTags();
   }
 
   const isOnBigScreen = useMediaQuery({ query: "(max-width: 1028px)" });
@@ -187,13 +169,12 @@ function App() {
       : 20;
 
   useEffect(() => {
-    function activeContactsEndPoint() {
-      if (activeTab === "favorites")
-        return "favorite-contacts";
-      return "contacts";
-    }
+    fetchData("tags", "GET")
+    .then(res => res.json())
+    .then(tags => setTags(tags))
+    .catch(err => console.log("Couldn't fetch tags!", err));
 
-    fetchData(activeContactsEndPoint(), "GET")
+    fetchData(activeTab, "GET")
     .then(res => res.json())
     .then(contacts => setContacts(contacts))
     .catch(err => console.log("Couldn't fetch contacts: ", err)) //TODO Error pages!
@@ -217,6 +198,7 @@ function App() {
           selectedContact={selectedContact}
           onContactEdit={handleContactEdit}
           onSetPopup={setNewTagPopup}
+          onCreateTag={handleCreateTag}
         />
       )}
       <section className="page">
@@ -227,24 +209,42 @@ function App() {
               icon="account_circle"
               size={58}
               isActive={activeTab === "contacts"}
-              onClick={handleSelectContactsTab}
+              onClick={() => handleSelectTab("contacts")}
             />
             <NavItem
               icon="stars"
               size={58}
-              isActive={activeTab === "favorites"}
-              onClick={handleSelectFavoritesTab}
+              isActive={activeTab === "favorite-contacts"}
+              onClick={() => handleSelectTab("favorite-contacts", "favorites")}
             />
             <NavItem icon="build_circle" size={58} />
             <NavItem icon="delete_history" size={58} />
           </NavGroup>
           <NavGroup className="tag-nav-group" title="Tags">
-            <NavItem icon="new_label">Add Tag</NavItem>
-            <NavItem icon="label">Family</NavItem>
+            <NavItem icon="new_label" onClick={() => setNewTagPopup(true)}>
+              Add Tag
+            </NavItem>
+            {tags.map((tag, idx) => (
+              <NavItem
+                key={idx}
+                icon="label"
+                isActive={activeTab === constructTagTab(tag.label)}
+                onClick={() =>
+                  handleSelectTab(constructTagTab(tag.label), tag.label)
+                }
+              >
+                <span>{tag.label}</span>
+              </NavItem>
+            ))}
           </NavGroup>
           <NavGroup className="settings-nav-group" showHorizBorder={false}>
             <NavItem icon="manage_accounts" fill={true} size={28} />
-            <NavItem icon="logout" fill={true} size={28} onClick={() => setIsLoggedIn(false)} />
+            <NavItem
+              icon="logout"
+              fill={true}
+              size={28}
+              onClick={() => setIsLoggedIn(false)}
+            />
             <NavItem icon="settings" fill={true} size={28} />
           </NavGroup>
         </NavBar>

@@ -3,14 +3,8 @@ let contacts = require("../data/contacts.json");
 
 const ps = new PredictiveSearch();
 
-for (contact of contacts) {
-    const contactId = contact.id;
-    const {first, last} = contact.name;
-    const contactName = `${first} ${last}`;
-    const contactPhone = contact.details.phone[0].content;
-
-    ps.addData(contactName.toLowerCase(), contactId);
-    ps.addData(contactPhone, contactId);
+for (const contact of contacts) {
+    ps.addContact(contact);
 }
 
 function getUser(id) {
@@ -23,16 +17,19 @@ function getUser(id) {
 }
 
 function search(req, res) {
-    const { query, favorites } = req.query;
+  const { query, tabFilter } = req.query;
 
-    const queryResults = ps.search(query);
-    let contacts = queryResults.map(result => getUser(result));
+  const queryResults = ps.search(query);
+  let contacts = queryResults.map((result) => getUser(result));
 
-    if (favorites == "true") {
-        contacts = contacts.filter((contact) => contact.isFavorite);
-    }
+  if (tabFilter === "favorites") {
+    contacts = contacts.filter((contact) => contact.isFavorite);
+  }
+  else if (tabFilter) {
+    contacts = contacts.filter((contact) => contact.tags.includes(tabFilter));
+  }
 
-    return res.status(200).json(contacts);
+  return res.status(200).json(contacts);
 }
 
 function searchFavorites(req, res) {

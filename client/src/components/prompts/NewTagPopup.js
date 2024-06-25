@@ -3,29 +3,33 @@ import "./prompts.css";
 
 import { useState } from "react";
 
-export function NewTagPopup({ selectedContact, onContactEdit, onSetPopup }) {
+export function NewTagPopup({ selectedContact, onContactEdit, onSetPopup, onCreateTag }) {
   const [tag, setTag] = useState("");
   const [focused, setFocused] = useState(false);
 
   function handleAddTag() {
-      if (!selectedContact || !tag) return;
+    onSetPopup(false);
+
+    if (!tag) return;
+
+    onCreateTag(tag);
+    
+    if (!selectedContact) return;
 
     if (!selectedContact.tags) {
       selectedContact.tags = [];
     }
-    
+
     const foundTagIndex = selectedContact.tags.findIndex((t) => t === tag);
-    
+
     if (foundTagIndex !== -1) {
-        onSetPopup(false);
-        return;
+      return;
     }
 
     const editedContact = { ...selectedContact };
     editedContact.tags.push(tag);
     onContactEdit(editedContact);
     onSetPopup(false);
-    return false;
   }
 
   return (
@@ -37,7 +41,7 @@ export function NewTagPopup({ selectedContact, onContactEdit, onSetPopup }) {
     >
       <div className="prompt" onClick={(e) => e.stopPropagation()}>
         <h4 className="prompt-header">Create a tag</h4>
-        <form className="prompt-form" onSubmit={() => handleAddTag()}>
+        <form className="prompt-form" onSubmit={handleAddTag}>
           <input
             className={`text-input ${focused && "text-input-focused"}`}
             type="text"
