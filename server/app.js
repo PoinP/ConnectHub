@@ -7,6 +7,8 @@ const bodyParser = require('body-parser');
 const contactRouter = require('./routes/Contact.js');
 const searchRouter = require('./routes/Search.js');
 const tagRouter = require('./routes/Tag.js');
+const userRoutes = require('./routes/Users.js');
+const authRoutes = require('./routes/ContactsRoutes.js');
 const connectDB = require('./configs/database.js');
 
 const app = express();
@@ -22,6 +24,8 @@ app.use(express.static('avatars'))
 app.use("/", contactRouter);
 app.use("/", searchRouter);
 app.use("/", tagRouter);
+app.use("/", userRoutes);
+app.use("/", authRoutes);
 
 // Serever startup
 

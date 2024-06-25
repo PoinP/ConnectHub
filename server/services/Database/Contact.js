@@ -1,5 +1,4 @@
-const User = require('../model/product.model');
-
+const User = require('../../models/Contact.js');
 
 const searchUsers = async (searchCriteria) => {
     try {
@@ -10,7 +9,7 @@ const searchUsers = async (searchCriteria) => {
     }
 };
 
-const getUsers = async() => {
+const getUsers = async () => {
     try {
         const users = await User.find({});
         return users;
@@ -19,9 +18,9 @@ const getUsers = async() => {
     }
 };
 
-const getUser = async (id) => {
+const getUserByEmail = async (email) => {
     try {
-        const user = await User.findById(id);
+        const user = await User.findOne({ 'details.email.address': email });
         return user;
     } catch (error) {
         throw new Error(error.message);
@@ -37,9 +36,9 @@ const createUser = async (userData) => {
     }
 };
 
-const updateUser = async(id, userData) => {
+const updateUserByEmail = async (email, userData) => {
     try {
-        const user = await User.findByIdAndUpdate(id, userData, { new: true });
+        const user = await User.findOneAndUpdate({ 'details.email.address': email }, userData, { new: true });
         if (!user) {
             throw new Error('User not found');
         }
@@ -49,9 +48,9 @@ const updateUser = async(id, userData) => {
     }
 };
 
-const deleteUser = async (searchCriteria) => {
+const deleteUserByEmail = async (email) => {
     try {
-        const user = await User.findByIdAndDelete(searchCriteria);
+        const user = await User.findOneAndDelete({ 'details.email.address': email });
         if (!user) {
             throw new Error('User not found');
         }
@@ -63,9 +62,9 @@ const deleteUser = async (searchCriteria) => {
 
 module.exports = {
     getUsers,
-    getUser,
+    getUserByEmail,
     createUser,
-    updateUser,
-    deleteUser,
+    updateUserByEmail,
+    deleteUserByEmail,
     searchUsers
 };
