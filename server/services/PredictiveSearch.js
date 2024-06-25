@@ -1,6 +1,7 @@
 class Node {
-  constructor(value) {
+  constructor(value, parent = null) {
     this.value = value;
+    this.parent = parent;
     this.children = [];
     this.data = new Set();
   }
@@ -15,8 +16,8 @@ class Node {
     return null;
   }
 
-  addChild(value) {
-    const newNode = new Node(value);
+  addChild(value, parent = null) {
+    const newNode = new Node(value, parent);
     this.children.push(newNode);
     return newNode;
   }
@@ -28,7 +29,7 @@ class PredictiveSearch {
     this.limit = null;
   }
 
-  setLimit(limit) {
+  setSearchLimit(limit) {
     this.limit = limit;
   }
 
@@ -40,13 +41,35 @@ class PredictiveSearch {
       let nextChild = currChild.getChild(char);
 
       if (!nextChild) {
-        nextChild = currChild.addChild(char);
+        nextChild = currChild.addChild(char, currChild);
       }
 
       currChild = nextChild;
     }
 
     currChild.data.add(data);
+  }
+
+  removeStringData(string, data) {
+    if (!string) return;
+    
+    let currChild = this.root;
+    for (const char of [...string]) {
+      let nextChild = currChild.getChild(char);
+      if (!nextChild) return;
+
+      currChild = nextChild;
+    }
+
+    this.#backtrackRemove(currChild, data)
+  }
+
+  removeData(data) {
+    const nodesToRemove = this.#getNodes(data);
+
+    for (const node of nodesToRemove) {
+      this.#backtrackRemove(node, data);
+    }
   }
 
   addContact(contact) {
@@ -117,10 +140,47 @@ class PredictiveSearch {
     stack.push(startingNode);
     while (stack.length) {
       const currNode = stack.pop();
+      console.log(currNode);
+      
       result.push(...currNode.data);
 
       if (this.limit && result.length > this.limit) {
         return result;
+      }
+
+      for (const child of currNode.children) {
+        stack.push(child);
+      }
+    }
+
+    return result;
+  }
+
+  #backtrackRemove(currChild, data) {
+    currChild.data.delete(data);
+    if (currChild.data.size) return;
+
+    let prevChild = currChild.parent;
+    while(!currChild.data.size) {
+      currChild.data.delete(data);
+
+      if (currChild.data.size) return;
+      
+      prevChild.children = [];
+      currChild = prevChild;
+      prevChild = currChild.parent;
+    }
+  }
+
+  #getNodes(data) {
+    const result = [];
+    const stack = [];
+    stack.push(this.root);
+    while (stack.length) {
+      const currNode = stack.pop();
+
+      if (currNode.data.has(data)) {
+        result.push(currNode);
       }
 
       for (const child of currNode.children) {
@@ -135,13 +195,15 @@ class PredictiveSearch {
 module.exports = PredictiveSearch;
 
 // Testing code
-// const ps = new PredictiveSearch();
-// ps.addData("test", 1);
-// ps.addData("test", 5);
-// ps.addData("testing", 2);
-// ps.addData("testingss", 9);
-// ps.addData("testingss we", 10);
-// ps.addData("tech", 13);
-// ps.print();
+const ps = new PredictiveSearch();
+ps.addData("test", 10);
+ps.addData("test", 5);
+ps.addData("testing", 10);
+ps.addData("testingss", 10);
+ps.addData("testingss we", 10);
+ps.addData("tech", 13);
+ps.print();
 
-// console.log(ps.search("testing"));
+ps.removeData(10);
+console.log(ps.search("test"));
+ps.print();
