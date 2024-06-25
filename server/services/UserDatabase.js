@@ -1,6 +1,9 @@
 const User = require('../model/product.model');
 const bcrypt = require('bcrypt');
 
+// Todo:
+// Remake as normal js code
+
 const getUsers = async (req, res) => {
     try {
         const users = await User.find({});
