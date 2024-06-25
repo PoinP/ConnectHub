@@ -1,46 +1,89 @@
-let bcrypt = require('bcryptjs');
+const User = require('../model/product.model');
+const bcrypt = require('bcrypt');
 
-function registerUser(req, res) {
-    const {username, email, password} = req.body;
-
-    if ([username, email, password].includes(undefined))
-    {
-      res.status(400).send(`Missing username, email or password`);
-      return;
+const getUsers = async (req, res) => {
+    try {
+        const users = await User.find({});
+        res.status(200).json({users});
+    } catch (error) {
+        res.status(500).json({message: error.message});
     }
+};
 
-    bcrypt.hash(password, 8, function(err, hash) {
-      // TODO: store hash in DB
-	  res.status(200).send(`Registered ${email}`);
-    });
-}
-  
-function loginUser(req, res) {
-    const {email, password} = req.body; 
-    if ([email, password].includes(undefined))
-    {
-      res.status(400).send(`Missing email, password or salt`);
-      return;
-    }       
-    let dbPassword = "TODO"; // TODO: DB    
-    bcrypt.compare(dbPassword, password).then((result) => {
-      // result := true | false
-      // TODO
-      if (result)
-      {
-        res.status(200).send(`Logged in ${email}`);
-        return;
-      }
-      else
-      {
-        res.status(400).send(`Wrong password for ${email}`);
-      }
-    });
-}
-  
+const getUser = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const user = await User.findById(id);
+        res.status(200).json({user});
+    }
+    catch (error) {
+        res.status(500).json({message: error.message});
+    }
+};
+
+const createUser = async (req, res) => {  
+    try{
+        const user = await User.create(req.body);
+        res.status(200).json({user});
+    }
+    catch(err){
+        res.status(500).json({message: err.message});
+    }
+};
+
+
+const updateUser = async (req, res) => {
+    try{
+        const { id } = req.params;
+
+        const user = await User.findByIdAndUpdate(id, req.body);
+
+        if(!user){
+            return res.status(404).json({message: "User not found"});
+        }
+
+        const updateUser = await User.findById(id);
+        res.status(200).json({updateUser});
+
+    }
+    catch(err){
+        res.status(500).json({message: err.message});
+    }
+};
+
+const deleteUser = async (req, res) => {
+    try{
+        const { id } = req.params;
+
+        const user = await User.findByIdAndDelete(id);
+
+        if(!user){
+            return res.status(404).json({message: "User not found"});
+        }
+
+        res.status(200).json({message: "User deleted"});
+
+    }
+    catch(err){
+        res.status(500).json({message: err.message});
+    }
+};
+
+const searchUsers = async (req, res) => {
+    try {
+        const searchCriteria = req.body; 
+        const users = await User.find(searchCriteria);
+        res.status(200).json({ users });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
 
 module.exports = {
-    registerUser,
-    loginUser
+    getUsers,
+    getUser,
+    createUser,
+    updateUser,
+    deleteUser,
+    searchUsers
 };
-  
