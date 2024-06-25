@@ -5,4 +5,4 @@ function generateId (req, res, next) {
     next();
 }
 
-module.exports = {generateId};
+module.exports = { generateId };

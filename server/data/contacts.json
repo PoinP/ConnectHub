@@ -1,0 +1,88 @@
+[
+  {
+    "id": 3,
+    "avatar": "https://i.pravatar.cc/1200?u=114836",
+    "isFavorite": true,
+    "name": { "first": "Georgi", "last": "Ivanov" },
+    "details": {
+      "phone": [
+        { "type": "phone", "detail": "Home", "content": "+359892531425" }
+      ]
+    },
+    "info": {},
+    "tags": ["Close Friends", "Classmate"]
+  },
+  {
+    "id": 1,
+    "avatar": "https://i.pravatar.cc/1200?u=118836",
+    "isFavorite": true,
+    "name": { "first": "Ivan", "last": "Ivanov" },
+    "details": {
+      "phone": [
+        { "type": "phone", "detail": "Home", "content": "+359892532378" },
+        { "type": "phone", "detail": "Work", "content": "+359896218726" }
+      ],
+      "mail": [
+        {
+          "type": "mail",
+          "detail": "Personal",
+          "content": "vankata_kk@abv.bg"
+        },
+        {
+          "type": "mail",
+          "detail": "Personal",
+          "content": "vankata_we12@gmail.com"
+        },
+        {
+          "type": "mail",
+          "detail": "Personal",
+          "content": "XXivanchoXX@abv.bg"
+        },
+        {
+          "type": "mail",
+          "detail": "Personal",
+          "content": "vanio_99@gmail.com"
+        },
+        {
+          "type": "mail",
+          "detail": "Personal",
+          "content": "ivan.i@protonmail.com"
+        },
+        {
+          "type": "mail",
+          "detail": "Work",
+          "content": "ivan.ivanov@sofia-uni.bg"
+        }
+      ]
+    },
+    "info": {
+      "date": [
+        { "type": "cake", "detail": "Birthday", "content": "2002-03-12" }
+      ],
+      "relationship": [
+        { "type": "workspaces", "detail": "Relationship", "content": "Brother" }
+      ],
+      "nickname": [
+        { "type": "person", "detail": "Nickname", "content": "The One" }
+      ]
+    },
+    "tags": ["Family", "Friends"]
+  },
+  {
+    "id": 2,
+    "avatar": "https://i.pravatar.cc/1200?u=118866",
+    "isFavorite": false,
+    "name": { "first": "Kristina", "last": "Koleva" },
+    "details": {
+      "phone": [
+        { "type": "phone", "detail": "Home", "content": "+359892531425" }
+      ]
+    },
+    "info": {
+      "date": [
+        { "type": "event", "detail": "Anniversary", "content": "2019-06-20" }
+      ]
+    },
+    "tags": ["Family", "Friends"]
+  }
+]
