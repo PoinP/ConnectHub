@@ -7,10 +7,13 @@
   
   .nav-bar {
     min-width: 100px;
+    max-width: 100px;
     height: 100%;
     box-sizing: content-box;
     padding-top: 1.5rem;
     padding: 0.5rem;
+
+    margin-bottom: 1em;
   
     display: flex;
     flex-direction: column;
