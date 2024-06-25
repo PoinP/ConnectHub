@@ -1,9 +1,9 @@
 import { MaterialButton } from "../MaterialButton";
+import { fetchData } from "../../services/FetchData";
 
-export function ContactActions({ id, size = 38, onSelectContact, onEditContact, onDeleteContact }) {
+export function ContactActions({ size = 38, contact, onFavoriteContact, onSelectContact, onEditContact, onDeleteContact }) {
   function handleDeleteContact() {
-    onDeleteContact(id);
-    onSelectContact(null);
+    onDeleteContact(contact.id);
   }
 
   return (
@@ -15,10 +15,26 @@ export function ContactActions({ id, size = 38, onSelectContact, onEditContact, 
         size={size}
         onClick={() => onSelectContact(null)}
       />
-
-      <MaterialButton className="mat-button" icon="star" size={size} />
-      <MaterialButton className="mat-button" icon="edit" size={size} onClick={() => onEditContact(true)} />
-      <MaterialButton className="mat-button" icon="delete" size={size} onClick={handleDeleteContact} />
+      <MaterialButton
+        className="mat-button"
+        fill={contact.isFavorite}
+        grade={0}
+        icon="star"
+        size={size}
+        onClick={() => onFavoriteContact(contact)}
+      />
+      <MaterialButton
+        className="mat-button"
+        icon="edit"
+        size={size}
+        onClick={() => onEditContact(true)}
+      />
+      <MaterialButton
+        className="mat-button"
+        icon="delete"
+        size={size}
+        onClick={handleDeleteContact}
+      />
     </section>
   );
 }

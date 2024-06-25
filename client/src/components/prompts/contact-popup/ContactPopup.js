@@ -100,8 +100,8 @@ const requirementStarStyle = {
 }
 
 export function ContactPopup({ contact, onAddContact, onEditContact, onSetPopup }) {
-    const [imageBlob, setImageBlob] = useState(null);
-    const [selectedImage, setSelectedImage] = useState("");
+    const [selectedAvatarUrl, setSelectedAvatarUrl] = useState(null);
+    const [selectedAvatarBlob, setSelectedAvatarBlob] = useState(null);
 
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
@@ -118,7 +118,7 @@ export function ContactPopup({ contact, onAddContact, onEditContact, onSetPopup 
     const [relationship, setRelationship] = useState("");
     const [nickname, setNickname] = useState("");
 
-    const [tags, setTags] = useState("");
+    const [tags, setTags] = useState([]);
 
     // Fill exisitng contact info
     useEffect(() => {
@@ -127,7 +127,7 @@ export function ContactPopup({ contact, onAddContact, onEditContact, onSetPopup 
 
       const { avatar, name, details, info, tags } = contact;
 
-      setSelectedImage(avatar);
+      setSelectedAvatarUrl(avatar);
 
       setFirstName(name.first);
       setLastName(name.last);
@@ -201,23 +201,22 @@ export function ContactPopup({ contact, onAddContact, onEditContact, onSetPopup 
     }
 
     function handleSelectAvatar(e) {
-      setImageBlob(blob => {
-        const currBlob = e.target.files[0] || blob;
-        setSelectedImage(currBlob ? URL.createObjectURL(currBlob) : null)
-        return currBlob;
-      });
+      const avatarBlob = e.target.files[0];
+      setSelectedAvatarBlob(avatarBlob);
+      setSelectedAvatarUrl(avatar => avatarBlob ? URL.createObjectURL(avatarBlob) : avatar);
     }
 
     function handleCreateContact() {
       if (!firstName || !lastName || !hasContent(phones)) return;
 
       const newContact = {
-        id: contact ? contact.id : -1,
-        avatar: selectedImage,
+        id: contact ? contact.id : null,
         name: {
           first: firstName,
           last: lastName
         },
+        avatar: selectedAvatarUrl,
+        isFavoritte: false,
         details: {
           phone:
             Array.from(phones)
@@ -261,9 +260,9 @@ export function ContactPopup({ contact, onAddContact, onEditContact, onSetPopup 
       }
       
       if (contact) {
-        onEditContact(newContact);
-      } else {
-        onAddContact(newContact);
+          onEditContact(newContact, selectedAvatarBlob);
+        } else {
+          onAddContact(newContact, selectedAvatarBlob);
       }
 
       onSetPopup(false);
@@ -272,9 +271,9 @@ export function ContactPopup({ contact, onAddContact, onEditContact, onSetPopup 
     return (
       <section className="background" onClick={() => onSetPopup(false)}>
         <section className="prompt" onClick={(e) => e.stopPropagation()}>
-          <h4 class="prompt-header">{`${contact ? "Edit" : "Create"} a contact`}</h4>
+          <h4 className="prompt-header">{`${contact ? "Edit" : "Create"} a contact`}</h4>
           <label className="file-upload" htmlFor="avatar-upload">
-            <Avatar src={selectedImage || null} alt="ProfilePicture"/>
+            <Avatar src={selectedAvatarUrl || null} alt="ProfilePicture"/>
             <span className="pure-button" onClick={null} style={{marginTop: "6px"}}>Choose a photo</span>
           </label>
           <input id="avatar-upload" type="file" accept="image/png, image/jpeg, image/gif" onChange={handleSelectAvatar} />
@@ -294,6 +293,7 @@ export function ContactPopup({ contact, onAddContact, onEditContact, onSetPopup 
 
           {Array.from(phones).map(([key, value]) => (
             <ContactInputCluster
+              key={key}
               id={key}
               icon="phone"
               placeholder="Phone Number"
@@ -308,6 +308,7 @@ export function ContactPopup({ contact, onAddContact, onEditContact, onSetPopup 
 
           {Array.from(emails).map(([key, value]) => (
             <ContactInputCluster
+              key={key}
               id={key}
               icon="email"
               placeholder="Email"
@@ -322,6 +323,7 @@ export function ContactPopup({ contact, onAddContact, onEditContact, onSetPopup 
 
           {Array.from(dates).map(([key, value]) => (
             <ContactInputCluster
+              key={key}
               id={key}
               type="date"
               icon={value.type}
@@ -339,7 +341,7 @@ export function ContactPopup({ contact, onAddContact, onEditContact, onSetPopup 
           <ContactElementBreak />
           <ContactInput icon="person" value={nickname} placeholder="Nickname" onChange={(e) => setNickname(e.target.value)}/>
 
-          <div class="button-layout">
+          <div className="button-layout">
             <Button onClick={handleCreateContact}>Save</Button>
             <Button onClick={() => onSetPopup(false)}>Cancel</Button>
           </div>

@@ -30,14 +30,14 @@ export function NewTagPopup({ selectedContact, onContactEdit, onSetPopup }) {
 
   return (
     <div
-      class="background"
+      className="background"
       onClick={() => {
         onSetPopup(false);
       }}
     >
-      <div class="prompt" onClick={(e) => e.stopPropagation()}>
-        <h4 class="prompt-header">Create a tag</h4>
-        <form class="prompt-form" onSubmit={() => handleAddTag()}>
+      <div className="prompt" onClick={(e) => e.stopPropagation()}>
+        <h4 className="prompt-header">Create a tag</h4>
+        <form className="prompt-form" onSubmit={() => handleAddTag()}>
           <input
             className={`text-input ${focused && "text-input-focused"}`}
             type="text"
@@ -45,7 +45,7 @@ export function NewTagPopup({ selectedContact, onContactEdit, onSetPopup }) {
             onFocus={() => setFocused(true)}
             onBlur={() => setFocused(false)}
           ></input>
-          <div class="button-layout">
+          <div className="button-layout">
             <Button onClick={() => handleAddTag()}>
               Save
             </Button>
