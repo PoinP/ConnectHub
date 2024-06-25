@@ -1,0 +1,7 @@
+{
+  "tags": [
+    { "label": "Family", "contacts": [1, 2] },
+    { "label": "Classmate", "contacts": [3, 4] },
+    { "label": "Friends", "contacts": [1] }
+  ]
+}

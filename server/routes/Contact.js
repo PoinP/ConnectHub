@@ -28,5 +28,6 @@ router.route("/contact")
 
 router.get("/contacts", controller.getAllContacts);
 router.get("/favorite-contacts", controller.getFavoriteContacts);
+router.get("/contacts-tag", controller.getTagContacts)
 
 module.exports = router;

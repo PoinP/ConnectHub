@@ -23,11 +23,26 @@ function getUser(id) {
 }
 
 function search(req, res) {
-    const { query } = req.query;
+    const { query, favorites } = req.query;
+
     const queryResults = ps.search(query);
-    const contacts = queryResults.map(result => getUser(result));
+    let contacts = queryResults.map(result => getUser(result));
+
+    if (favorites == "true") {
+        contacts = contacts.filter((contact) => contact.isFavorite);
+    }
 
     return res.status(200).json(contacts);
 }
 
-module.exports = { search }
+function searchFavorites(req, res) {
+    const { query } = req.query;
+    const queryResults = ps.search(query);
+    const contacts = queryResults
+      .map((result) => getUser(result))
+      .filter((user) => user.isFavorite);
+
+    return res.status(200).json(contacts);
+}
+
+module.exports = { search, searchFavorites }

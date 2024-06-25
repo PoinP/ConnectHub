@@ -1,6 +1,16 @@
+let tags = require("../data/tags.json");
 let contacts = require("../data/contacts.json");
 
 const { sortContacts } = require("../utils/utilities");
+
+function getContactById(id) {
+    const foundContact = contacts.find(contact => contact.id == id);
+    
+    if(!foundContact)
+        return null
+
+    return foundContact;
+}
 
 function getContact(req, res) {
   const { id } = req;
@@ -63,6 +73,7 @@ function updateContact(req, res) {
 
   for (let i = 0; i < contacts.length; i++) {
     if (contacts[i].id === id) {
+      // Set new tags to db
       contacts[i] = contact;
       res.status(200).send(JSON.stringify(contacts[i]));
       return;
@@ -91,6 +102,20 @@ function getFavoriteContacts(req, res) {
   res.status(200).json(contacts.filter((contact) => contact.isFavorite));
 }
 
+function getTagContacts(req, res) {
+    const { tagLabel } = req.query;
+    const tag = tags.find(tag => tag.label === "tagLabel");
+
+    if (!tag) {
+        res.status(404).send(`The tag ${tagLabel} could not be found!`);
+        return;
+    }
+
+    res
+      .status(200)
+      .json(tag.contacts.map((contact) => getContactById(contact.id)));
+}
+
 module.exports = {
   getContact,
   createContact,
@@ -98,4 +123,5 @@ module.exports = {
   deleteContact,
   getAllContacts,
   getFavoriteContacts,
+  getTagContacts
 };
