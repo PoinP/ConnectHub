@@ -3,6 +3,8 @@ let contacts = require("../data/contacts.json");
 
 const { sortContacts } = require("../utils/utilities");
 
+const { updateSearch } = require("./SearchController");
+
 function getContactById(id) {
     const foundContact = contacts.find(contact => contact.id === id);
     
@@ -63,6 +65,10 @@ function createContact(req, res) {
   const generatedId = req.contactId;
   const newContact = { ...contact, id: generatedId, avatar: avatarPath };
 
+  // TEMP
+  updateSearch(newContact);
+  // TEMP
+
   contacts.push(newContact); // TODO: DB
   contacts = sortContacts(contacts);
   res.status(200).json(newContact);
@@ -90,6 +96,9 @@ function updateContact(req, res) {
     if (contacts[i].id === id) {
         contacts[i] = contact;
         validateTags(contacts[i]);
+        // TEMP
+        updateSearch(contact);
+        // TEMP
       res.status(200).send(JSON.stringify(contacts[i]));
       return;
     }

@@ -1,10 +1,10 @@
-const PredictiveSearch = require("../services/PredictiveSearch");
+const ContactSearch = require("../services/PredictiveSearch/ContactSearch.js");
 let contacts = require("../data/contacts.json");
 
-const ps = new PredictiveSearch();
+const cs = new ContactSearch();
 
 for (const contact of contacts) {
-    ps.addContact(contact);
+    cs.addContact(contact);
 }
 
 function getUser(id) {
@@ -16,10 +16,15 @@ function getUser(id) {
     return foundUser;
 }
 
+// No database :)))
+function updateSearch(contact) {
+    cs.updateContact(contact);
+}
+
 function search(req, res) {
   const { query, tabFilter } = req.query;
 
-  const queryResults = ps.search(query);
+  const queryResults = cs.search(query);
   let contacts = queryResults.map((result) => getUser(result));
 
   if (tabFilter === "favorites") {
@@ -34,7 +39,7 @@ function search(req, res) {
 
 function searchFavorites(req, res) {
     const { query } = req.query;
-    const queryResults = ps.search(query);
+    const queryResults = cs.search(query);
     const contacts = queryResults
       .map((result) => getUser(result))
       .filter((user) => user.isFavorite);
@@ -42,4 +47,4 @@ function searchFavorites(req, res) {
     return res.status(200).json(contacts);
 }
 
-module.exports = { search, searchFavorites }
+module.exports = { search, searchFavorites, updateSearch }

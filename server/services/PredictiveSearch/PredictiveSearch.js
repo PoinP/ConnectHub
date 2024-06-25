@@ -1,27 +1,4 @@
-class Node {
-  constructor(value, parent = null) {
-    this.value = value;
-    this.parent = parent;
-    this.children = [];
-    this.data = new Set();
-  }
-
-  getChild(value) {
-    for (const child of this.children) {
-      if (child.value === value) {
-        return child;
-      }
-    }
-
-    return null;
-  }
-
-  addChild(value, parent = null) {
-    const newNode = new Node(value, parent);
-    this.children.push(newNode);
-    return newNode;
-  }
-}
+const Node = require("./Node");
 
 class PredictiveSearch {
   constructor() {
@@ -52,7 +29,7 @@ class PredictiveSearch {
 
   removeStringData(string, data) {
     if (!string) return;
-    
+
     let currChild = this.root;
     for (const char of [...string]) {
       let nextChild = currChild.getChild(char);
@@ -61,7 +38,7 @@ class PredictiveSearch {
       currChild = nextChild;
     }
 
-    this.#backtrackRemove(currChild, data)
+    this.#backtrackRemove(currChild, data);
   }
 
   removeData(data) {
@@ -70,18 +47,6 @@ class PredictiveSearch {
     for (const node of nodesToRemove) {
       this.#backtrackRemove(node, data);
     }
-  }
-
-  addContact(contact) {
-    const contactId = contact.id;
-    const {first, last} = contact.name;
-    const contactName = `${first} ${last}`;
-    const contactPhone = contact.details.phone[0].content;
-
-    this.addData(first.toLowerCase(), contactId);
-    this.addData(last.toLowerCase(), contactId);
-    this.addData(contactName.toLowerCase(), contactId);
-    this.addData(contactPhone, contactId);
   }
 
   search(string) {
@@ -140,8 +105,6 @@ class PredictiveSearch {
     stack.push(startingNode);
     while (stack.length) {
       const currNode = stack.pop();
-      console.log(currNode);
-      
       result.push(...currNode.data);
 
       if (this.limit && result.length > this.limit) {
@@ -161,11 +124,11 @@ class PredictiveSearch {
     if (currChild.data.size) return;
 
     let prevChild = currChild.parent;
-    while(!currChild.data.size) {
+    while (prevChild && !currChild.data.size) {
       currChild.data.delete(data);
 
       if (currChild.data.size) return;
-      
+
       prevChild.children = [];
       currChild = prevChild;
       prevChild = currChild.parent;
