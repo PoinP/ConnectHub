@@ -121,13 +121,14 @@ class PredictiveSearch {
 
   #backtrackRemove(currChild, data) {
     currChild.data.delete(data);
-    if (currChild.data.size) return;
+    if (currChild.data.size || currChild.children.length) return;
 
     let prevChild = currChild.parent;
     while (prevChild && !currChild.data.size) {
       currChild.data.delete(data);
 
       if (currChild.data.size) return;
+      if (prevChild == this.root) return;
 
       prevChild.children = [];
       currChild = prevChild;
