@@ -1,8 +1,11 @@
-const express = require('express');
 const cors = require('cors');
+const dotenv = require('dotenv');
+const express = require('express');
+const mongoose = require('mongoose');
 
 const bodyParser = require('body-parser');
 const contactRouter = require('./routes/Contact.js');
+const searchRouter = require('./routes/Search.js');
 
 const app = express();
 const port = 8080;
@@ -15,11 +18,29 @@ app.use(express.static('avatars'))
 
 // Routes
 app.use("/", contactRouter);
+app.use("/", searchRouter);
 
 // Serever startup
+
+// Uncomment when you download and run mongo
+// We need env.variables
+// mongoose
+//   .connect(process.env.DB_CONN_STRING, {
+//     useNewUrlParser: true,
+//     useUnifiedTopology: true,
+//   })
+//   .then(() => {
+//     console.log("Connected to database");
+//   })
+//   .catch((error) => {
+//     console.error("Connection failed", error);
+//   });
+
+
 app.listen(port, () => {
-    console.log(`Phone Book app listening on port ${port}`);
-})
+  console.log(`Phone Book app listening on port ${port}`);
+});
+
 
 // TODO: Remove? Keep for now
 // function formatNumber(number) {

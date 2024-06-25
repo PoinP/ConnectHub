@@ -7,12 +7,18 @@ export function Search({
   size = 12,
   fontSize = 18,
   className = "",
+  onSearch,
   onSelectCreateContact,
 }) {
   const [query, setQuery] = useState("");
   const [focused, setFocused] = useState(false);
 
   const searchID = useId();
+
+  function handleOnChange(e) {
+    setQuery(e.target.value);
+    onSearch(e.target.value.toLowerCase());
+  }
 
   return (
     <section style={{ fontSize: { fontSize } }} className={className}>
@@ -28,7 +34,7 @@ export function Search({
           size={size}
           value={query}
           placeholder={placeholder}
-          onChange={(e) => setQuery(e.target.value)}
+          onChange={handleOnChange}
           onFocus={() => setFocused(true)}
           onBlur={() => setFocused(false)}
         />

@@ -18,7 +18,7 @@ import { NavGroup } from "./components/navigation/NavGroup.js";
 import { NavItem } from "./components/navigation/NavItem.js";
 import { UserAccess } from "./components/user-access/UserAcess.js";
 import { ContactPopup } from "./components/prompts/contact-popup/ContactPopup.js";
-import { fetchData, fetchFormData } from "./services/FetchData.js";
+import { fetchData, fetchFormData, fetchQueryData } from "./services/FetchData.js";
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(true);
@@ -104,6 +104,11 @@ function App() {
       .catch((err) => console.log("Couldn't delete contact", err));
   }
 
+  function handleCreateContactPrompt(status) {
+    setContactPopup(status);
+    setShouldEditContact(!status);
+  }
+
   function handleEditContactPrompt(status) {
     setContactPopup(status);
     setShouldEditContact(status);
@@ -124,8 +129,8 @@ function App() {
 
   function handleSelectFavoritesTab() {
     fetchData("favorite-contacts", "GET")
-      .then((res) => res.json())
-      .then((contacts) => {
+      .then(res => res.json())
+      .then(contacts => {
         setContacts(contacts);
         setSelectedContact(null);
         setActiveTab("favorites");
@@ -137,6 +142,27 @@ function App() {
 
   function handleFavoriteContact(contact) {
     handleContactEdit({...contact, isFavorite: !contact.isFavorite});
+  }
+
+  function loadContacts() {
+    fetchData(activeContactsEndPoint(), "GET")
+      .then((res) => res.json())
+      .then((contacts) => setContacts(contacts))
+      .catch((error) => "Error when fetching contacts...");
+  }
+
+  function handleSearch(query) {
+    if (!query) {
+      loadContacts();
+      return;
+    }
+
+    fetchQueryData("search", "GET", { query })
+    .then(res => res.json())
+    .then(contacts => {
+      setContacts(contacts);
+    })
+    .catch((err) => console.log("Error searching!", err))
   }
 
   const isOnBigScreen = useMediaQuery({ query: "(max-width: 1028px)" });
@@ -226,7 +252,8 @@ function App() {
                 <Search
                   size={vertSearch}
                   className="search-area vert-search-area "
-                  onSelectCreateContact={setContactPopup}
+                  onSearch={handleSearch}
+                  onSelectCreateContact={handleCreateContactPrompt}
                 />
                 <VerticalContactsList
                   contacts={contacts}
@@ -240,7 +267,8 @@ function App() {
               <Search
                 size={gridSearch}
                 className="search-area grid-search-area"
-                onSelectCreateContact={setContactPopup}
+                onSearch={handleSearch}
+                onSelectCreateContact={handleCreateContactPrompt}
               />
               <GridContactsList
                 contacts={contacts}

@@ -1,13 +1,7 @@
 let contacts = require("../data/contacts.json");
 let bcrypt = require('bcryptjs');
 
-function sortContacts(contacts) {
-  return contacts.sort((a, b) =>
-    `${a.name.first} ${a.name.second}`.localeCompare(
-      `${b.name.first} ${b.name.second}`
-    )
-  );
-}
+const { sortContacts } = require("../utils/utilities");
 
 function getContact(req, res) {
   const { id } = req;
@@ -49,7 +43,7 @@ function createContact(req, res) {
 
   contacts.push(newContact); // TODO: DB
   contacts = sortContacts(contacts);
-  res.status(200).send(JSON.stringify(newContact));
+  res.status(200).json(newContact);
 }
 
 function updateContact(req, res) {
