@@ -1,54 +1,49 @@
-const AuthUser = require('../models/authUser.model');
-const bcrypt = require('bcrypt');
+const AuthUser = require('../models/Users');
 
-const registerUser = async (req, res) => {
+const registerUser = async (userData) => {
     try {
-        const { email, password } = req.body;
+        const { email, password } = userData;
 
-        // Check if user already exists
         const existingUser = await AuthUser.findOne({ email });
+
         if (existingUser) {
-            return res.status(409).json({ message: 'User already exists' });
+            throw new Error('User already exists');
         }
 
-        // Hash the password
-        const salt = await bcrypt.genSalt(10);
-        const hashedPassword = await bcrypt.hash(password, salt);
-
-        const user = new AuthUser({
-            email,
-            password: hashedPassword,
-            salt
-        });
+        const user = new AuthUser(
+            { email, 
+                password 
+            });
 
         await user.save();
-        res.status(201).json({ message: 'User registered successfully' });
-    } catch (error) {
-        res.status(400).json({ message: error.message });
-    }
-};
 
-const loginUser = async (req, res) => {
+        return ({message: 'User registered successfully'});
+
+    } catch (error) {
+        throw new Error(error.message);
+    }
+}
+
+const loginUser = async (userData) => {
     try {
-        const { email, password } = req.body;
+        const { email, password } = userData;
 
-        const user = await AuthUser.findOne({ email });
+        const user = await AuthUser.findOne({email,password});
+
         if (!user) {
-            return res.status(401).json({ message: 'Invalid credentials' });
+            throw new Error('Invalid email or password');
+        }
+        if (user.password !== password) {
+            throw new Error('Invalid  password');
+        }
+        if (user.email !== email) {
+            throw new Error('Invalid email');
         }
 
-        const isPasswordValid = await bcrypt.compare(password, user.password);
-        if (!isPasswordValid) {
-            return res.status(401).json({ message: 'Invalid credentials' });
-        }
-
-        res.status(200).json({ message: 'Login successful' });
+        return ({message: 'User logged in successfully'});
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        throw new Error(error.message);
     }
 };
 
-module.exports = {
-    registerUser,
-    loginUser
-};
+model.exports = { registerUser, loginUser };

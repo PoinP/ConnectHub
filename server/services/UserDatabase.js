@@ -1,84 +1,63 @@
 const User = require('../model/product.model');
-const bcrypt = require('bcrypt');
 
-// Todo:
-// Remake as normal js code
 
-const getUsers = async (req, res) => {
+const searchUsers = async (searchCriteria) => {
+    try {
+        const users = await User.find(searchCriteria);
+        return users;
+    } catch (error) {
+        throw new Error(error.message);
+    }
+};
+
+const getUsers = async() => {
     try {
         const users = await User.find({});
-        res.status(200).json({users});
+        return users;
     } catch (error) {
-        res.status(500).json({message: error.message});
+        throw new Error(error.message);
     }
 };
 
-const getUser = async (req, res) => {
+const getUser = async (id) => {
     try {
-        const { id } = req.params;
         const user = await User.findById(id);
-        res.status(200).json({user});
-    }
-    catch (error) {
-        res.status(500).json({message: error.message});
-    }
-};
-
-const createUser = async (req, res) => {  
-    try{
-        const user = await User.create(req.body);
-        res.status(200).json({user});
-    }
-    catch(err){
-        res.status(500).json({message: err.message});
-    }
-};
-
-
-const updateUser = async (req, res) => {
-    try{
-        const { id } = req.params;
-
-        const user = await User.findByIdAndUpdate(id, req.body);
-
-        if(!user){
-            return res.status(404).json({message: "User not found"});
-        }
-
-        const updateUser = await User.findById(id);
-        res.status(200).json({updateUser});
-
-    }
-    catch(err){
-        res.status(500).json({message: err.message});
-    }
-};
-
-const deleteUser = async (req, res) => {
-    try{
-        const { id } = req.params;
-
-        const user = await User.findByIdAndDelete(id);
-
-        if(!user){
-            return res.status(404).json({message: "User not found"});
-        }
-
-        res.status(200).json({message: "User deleted"});
-
-    }
-    catch(err){
-        res.status(500).json({message: err.message});
-    }
-};
-
-const searchUsers = async (req, res) => {
-    try {
-        const searchCriteria = req.body; 
-        const users = await User.find(searchCriteria);
-        res.status(200).json({ users });
+        return user;
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        throw new Error(error.message);
+    }
+};
+
+const createUser = async (userData) => {
+    try {
+        const user = await User.create(userData);
+        return user;
+    } catch (error) {
+        throw new Error(error.message);
+    }
+};
+
+const updateUser = async(id, userData) => {
+    try {
+        const user = await User.findByIdAndUpdate(id, userData, { new: true });
+        if (!user) {
+            throw new Error('User not found');
+        }
+        return user;
+    } catch (error) {
+        throw new Error(error.message);
+    }
+};
+
+const deleteUser = async (searchCriteria) => {
+    try {
+        const user = await User.findByIdAndDelete(searchCriteria);
+        if (!user) {
+            throw new Error('User not found');
+        }
+        return user;
+    } catch (error) {
+        throw new Error(error.message);
     }
 };
 
