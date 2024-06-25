@@ -7,6 +7,7 @@ const bodyParser = require('body-parser');
 const contactRouter = require('./routes/Contact.js');
 const searchRouter = require('./routes/Search.js');
 const tagRouter = require('./routes/Tag.js');
+const connectDB = require('./configs/database.js');
 
 const app = express();
 const port = 8080;
@@ -26,16 +27,7 @@ app.use("/", tagRouter);
 
 // Uncomment when you download and run mongo
 // We need env.variables
-mongoose
-  .connect(process.env.DB_CONN_STRING, {
-  })
-  .then(() => {
-    console.log("Connected to database");
-  })
-  .catch((error) => {
-    console.error("Connection failed", error);
-  });
-
+connectDB();
 
 app.listen(port, () => {
   console.log(`Phone Book app listening on port ${port}`);

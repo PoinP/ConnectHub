@@ -14,7 +14,7 @@ const contactSchema = mongoose.Schema(
   },
   {
     timestamps: true,
-    collection: "authUsers",
+    collection: "authenticationuser",
   }
 );
 
