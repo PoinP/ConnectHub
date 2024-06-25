@@ -217,8 +217,8 @@ function App() {
               isActive={activeTab === "favorite-contacts"}
               onClick={() => handleSelectTab("favorite-contacts", "favorites")}
             />
-            <NavItem icon="build_circle" size={58} />
-            <NavItem icon="delete_history" size={58} />
+            <NavItem icon="build_circle" size={58} isDisabled={true} />
+            <NavItem icon="delete_history" size={58} isDisabled={true} />
           </NavGroup>
           <NavGroup className="tag-nav-group" title="Tags">
             <NavItem icon="new_label" onClick={() => setNewTagPopup(true)}>
@@ -238,14 +238,14 @@ function App() {
             ))}
           </NavGroup>
           <NavGroup className="settings-nav-group" showHorizBorder={false}>
-            <NavItem icon="manage_accounts" fill={true} size={28} />
+            <NavItem icon="manage_accounts" fill={true} size={28} isDisabled={true} />
             <NavItem
               icon="logout"
               fill={true}
               size={28}
               onClick={() => setIsLoggedIn(false)}
             />
-            <NavItem icon="settings" fill={true} size={28} />
+            <NavItem icon="settings" fill={true} size={28} isDisabled={true} />
           </NavGroup>
         </NavBar>
         <Main>
