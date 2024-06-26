@@ -8,7 +8,7 @@ const bodyParser = require('body-parser');
 const contactRouter = require('./routes/Contact.js');
 const searchRouter = require('./routes/Search.js');
 const tagRouter = require('./routes/Tag.js');
-const userRouter = require('./routes/Users.js');
+const userRouter = require('./routes/User.js');
 const connectDB = require('./configs/database.js');
 
 const app = express();
@@ -20,8 +20,6 @@ app.use(cors());
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static('avatars'))
-
-// app.use(express.json())
 
 // Routes
 app.use("/", contactRouter);

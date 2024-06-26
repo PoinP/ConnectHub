@@ -7,6 +7,7 @@ import { useState } from "react";
 import { ValidationSchema } from "../../services/ValidationSchema";
 import { Condition } from "../../services/Condition";
 import { PureButton } from "../PureButton";
+import { clientRegister } from "../../services/UserAuth";
 
 function emptyString(str) {
   return str.length !== 0;
@@ -72,14 +73,20 @@ const validationSchema = new ValidationSchema({
   },
 });
 
-export function SignUp({ onLogin, onRegister}) {
+export function SignUp({ onChangePage, onSuccess}) {
+  const [error, setError] = useState(null);
   const [password, setPassword] = useState("");
   const [validator, setValidator] = useState(new Validator(validationSchema));
 
   function handleRegister(e) {
     e.preventDefault();
-    if (validator.isValid())
-        onRegister(true);
+    if (validator.isValid()) {
+      const username = e.target[0].value;
+      const email = e.target[1].value;
+      const password = e.target[2].value;
+
+      clientRegister(username, email, password, onSuccess, setError);
+    }
   }
 
   return (
@@ -121,8 +128,9 @@ export function SignUp({ onLogin, onRegister}) {
           validateWith={password}
           validateWithMessage={"Your passswords must match!"}
         ></FormInput>
+        {error && <span className="form-error">{error}</span>}
         <Button>Register</Button>
-        <PureButton onClick={() => onLogin(false)}>Login instead</PureButton>
+        <PureButton onClick={() => onChangePage(false)}>Login instead</PureButton>
       </form>
     </section>
   );

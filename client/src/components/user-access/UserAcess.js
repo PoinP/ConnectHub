@@ -2,15 +2,15 @@ import { useState } from "react";
 import { SignUp } from "./SignUp";
 import { SignIn } from "./SignIn";
 
-export function UserAccess({ onFinish }) {
+export function UserAccess({ onSuccess }) {
   const [isRegistering, setIsRegistering] = useState(false);
 
   return (
     <>
       {isRegistering ? (
-        <SignUp onLogin={setIsRegistering} onRegister={onFinish}></SignUp>
+        <SignUp onChangePage={setIsRegistering} onSuccess={onSuccess}></SignUp>
       ) : (
-        <SignIn onRegister={setIsRegistering} onLogin={onFinish}></SignIn>
+        <SignIn onChangePage={setIsRegistering} onSuccess={onSuccess}></SignIn>
       )}
     </>
   );

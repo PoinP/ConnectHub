@@ -181,7 +181,7 @@ function App() {
   }, [activeTab]);
 
   if (!isLoggedIn)
-    return <UserAccess onFinish={setIsLoggedIn}/>
+    return <UserAccess onSuccess={setIsLoggedIn}/>
 
   return (
     <>
