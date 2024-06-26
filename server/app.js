@@ -2,6 +2,7 @@ const cors = require('cors');
 const dotenv = require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
+const cookieParser = require('cookie-parser')
 
 const bodyParser = require('body-parser');
 const contactRouter = require('./routes/Contact.js');
@@ -14,6 +15,7 @@ const app = express();
 const port = 8080;
 
 // Middleware
+app.use(cookieParser())
 app.use(cors());
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }));

@@ -1,28 +1,28 @@
 //let tags = require("../data/tags.json");
 let Contact = require("../models/Contact.js")
+let Users = require("../models/Users.js")
 
 const { sortContacts } = require("../utils/utilities");
 
 const { updateSearch } = require("./SearchController");
 
-function validateTags(contact) {
-    const contactTags = contact.tags;
-    for (const {label, contacts} of tags) {
-        const foundIndex = contacts.findIndex(id => id === contact.id);
+async function getUserAndContactsByToken(token)
+{
+  let user = await Users.findOne({token});
+  if (!user)
+    return null;
 
-        if (foundIndex != -1) {
-            contacts.splice(foundIndex, 1);
-        }
-    }
+  return {
+    user: user,
+    contacts: await Contact.find({_id: {$in: user.contactIds}})
+  };
+}
 
-    for (const tag of contactTags) {
-        for (const {label, contacts} of tags) {
-            if (tag === label) {
-                contacts.push(contact.id);
-                return;
-            }
-        }
-    }
+async function validateTags(user, contact) {
+  let tagsSet = new Set(user.tags);
+  contact.tags.forEach(tag => tagsSet.add(tag));
+
+  user.tags = Array.from(tagsSet);
 }
 
 async function getContact(req, res) {
@@ -58,6 +58,12 @@ async function createContact(req, res) {
     return;
   }
 
+  const token = req.cookies.token;
+  const user = await Users.findOne( {token} )
+  if (!user)
+    return res.status(400).send("invalid cookie");
+
+
   const avatar = req.file;
   const avatarPath = avatar
     ? `http://localhost:8080/${req.file.filename}`
@@ -68,11 +74,16 @@ async function createContact(req, res) {
   // TEMP
   updateSearch(newContact);
   // TEMP
+  validateTags(user, newContact);
 
-  let tagsSet = new Set(...tags);
+  const dbContact = new Contact(newContact);
+  await dbContact.save();
 
-  await Contact.create(contact);
-  res.status(200).json(newContact);
+  user.contactIds.push(dbContact._id);
+  
+  await user.save();
+
+  res.status(200).json(dbContact);
 }
 
 async function updateContact(req, res) {
@@ -95,11 +106,10 @@ async function updateContact(req, res) {
 
   try
   {
-    const toEditContact = await Contact.findById(_id);
+    const toEditContact = await Contact.findByIdAndUpdate(_id, contact);
+
     if (!toEditContact)
       res.status(404).send(`A user with an id of ${_id} can not be found!`);
-
-    Object.assign(toEditContact, contact);
 
     validateTags(toEditContact);
     // TEMP
@@ -121,41 +131,61 @@ async function deleteContact(req, res) {
   if (_id === undefined)
     return res.status(400).send(`id is required...`);
 
+  const token = req.cookies.token;
+  const user = await Users.findOne({token});
+  if (!user)
+    return res.status(400).send(`Bad cookie`);
+
   const toDelete = await Contact.findByIdAndDelete(_id);
   if (!toDelete)
     return res.status(404).send(`Contact with id ${_id} was not found`);
+  
+  user.contactIds = user.contactIds.filter((id) => id._id !== _id);
+  await user.save();
 
   return res.status(200).send(`Contact with id ${_id} was deleted successfully`);
 }
 
 async function getAllContacts(req, res) {
-  res.status(200).json(await Contact.find({}));
+  res.status(200).json((await getUserAndContactsByToken(req.cookies.token)).contacts);
 }
 
 async function getFavoriteContacts(req, res) {
   try {
-    const favouriteContacts = await Contact.find({ isFavourite: true });
-      if (!favouriteContacts)
-        return res.status(404).send(`No favourite contacts...`);
+    const fullUser = await getUserAndContactsByToken(req.cookies.token);
+
+    const favouriteContacts = fullUser.contacts.filter(contact => contact.isFavourite == true );
+    console.log(fullUser.contacts);
+      if (favouriteContacts.length == 0)
+        return res.status(404).send(`No favourite contacts...`);  
     return res.status(200).json(favouriteContacts);
+    
   } catch (error) {
     console.log("Error fetching favourite contacts: ", error);
-    res.status(500).json({ message: error.message });
+    res.status(500).send(`${error}`);
   }
 }
 
 async function getTagContacts(req, res) {
     const { label } = req.query;
-    const tag = tags.find(tag => tag.label === label);
+
+    const fullUser = await getUserAndContactsByToken(req.cookies.token)
+    
+    if (!fullUser)
+      res.status(400).send(`Bad cookie`);
+    
+    const tag = fullUser.user.tags.find(tag => tag === label);
 
     if (!tag) {
         res.status(404).send(`The tag ${label} could not be found!`);
         return;
     }
 
+    const contacts = fullUser.contacts.filter(contact => contact.tags.includes(tag));
+    
     res
       .status(200)
-      .json(tag.contacts.map((id) => getContactById(id)));
+      .json(contacts);
 }
 
 module.exports = {

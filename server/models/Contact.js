@@ -19,7 +19,6 @@ const userSchema = mongoose.Schema(
       },
       last: {
         type: String,
-        required: true
       },
     },
     

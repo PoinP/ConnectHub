@@ -16,6 +16,9 @@ const userSchema = mongoose.Schema(
       type: String,
       required: true,
     },
+    token: {
+      type: String,
+    },
     contactIds: [
       {
         _id: String

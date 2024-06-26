@@ -15,7 +15,7 @@ const registerUser = async (req, res) =>{
         res.status(201).json(user);
 
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        res.status(500).send(`${error}`);
     }
 };
 
@@ -27,17 +27,19 @@ const loginUser = async (req, res) =>{
             return res.status(400).send(`No username or password provided`);
 
         const user = await AuthUser.findOne({ username:username });
-        if (!user) return res.status(404).json({ message: "User not found" });
+        if (!user) return res.status(404).send("User not found");
 
         const isMatch = await bcrypt.compare(password, user.password);
-        if (!isMatch) return res.status(400).json({ message: "Invalid credentials" });
+        if (!isMatch) return res.status(400).send("Invalid credentials");
 
         const token = jwt.sign({ username: user.username }, process.env.JWT_SECRET);
+        user.token = token;
+        await user.save();
         delete user.password;
-        res.status(200).json({ user, token });
+        res.status(200).json({token});
 
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        res.status(500).send(`${error}`);
     }
 };
 
