@@ -74,11 +74,13 @@ function handleDynamicDeletion(id, setItems, setCount) {
     })
 }
 
-function fillDynamicValues(values, setItems, setCount) {
+function fillDynamicValues(values, type, detail, setItems, setCount) {
     const map = new Map();
     values.forEach((p, idx) => {
         map.set(idx, p);
     })
+
+    map.set(values.length, getDefault(type, detail))
 
     setItems(map);
     setCount(map.size);
@@ -133,25 +135,25 @@ export function ContactPopup({ contact, onAddContact, onEditContact, onSetPopup 
       setLastName(name.last);
 
       if (details) {
-        if (details.phone) {
-          fillDynamicValues(details.phone, setPhones, setPhonesCount);
+        if (details.phone && details.phone.length) {
+          fillDynamicValues(details.phone, "phone", "Mobile", setPhones, setPhonesCount);
         }
 
-        if (details.mail) {
-          fillDynamicValues(details.mail, setEmails, setEmailsCount);
+        if (details.mail && details.mail.length) {
+          fillDynamicValues(details.mail, "email", "Home", setEmails, setEmailsCount);
         }
       }
 
       if (info) {
-        if (info.date) {
-          fillDynamicValues(info.date, setDates, setDatesCount);
+        if (info.date && info.date.length) {
+          fillDynamicValues(info.date, "event", "Anniversary", setDates, setDatesCount);
         }
 
-        if (info.relationship) {
+        if (info.relationship && info.relationship.length) {
           setRelationship(info.relationship[0].content);
         }
 
-        if (info.nickname) {
+        if (info.nickname && info.nickname.length) {
           setNickname(info.nickname[0].content);
         }
 

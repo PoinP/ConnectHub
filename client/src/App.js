@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useMediaQuery } from "react-responsive";
 import { Search } from "./components/Search.js";
 
@@ -21,7 +21,7 @@ import { ContactPopup } from "./components/prompts/contact-popup/ContactPopup.js
 import { fetchData, fetchFormData, fetchQueryData } from "./services/FetchData.js";
 
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [contacts, setContacts] = useState([]);
   const [tags, setTags] = useState([]);
 
@@ -43,6 +43,7 @@ function App() {
     fetchFormData("contact", "POST", formData)
       .then(res => res.json())
       .then(contact => {
+        console.log(contact);
         setSelectedContact(contact);
         loadContacts();
       })
@@ -101,15 +102,15 @@ function App() {
     setActiveTab(tab);
     setFilter(filter);
     setSelectedContact(null);
-    loadContacts();
+    loadContacts(tab);
   }
 
   function handleFavoriteContact(contact) {
     handleContactEdit({...contact, isFavorite: !contact.isFavorite});
   }
 
-  function loadContacts() {
-    fetchData(activeTab, "GET")
+  function loadContacts(tab = activeTab) {
+    fetchData(tab, "GET")
       .then((res) => res.json())
       .then((contacts) => setContacts(contacts))
       .catch((error) => "Error when fetching contacts...");
@@ -118,7 +119,7 @@ function App() {
   function loadTags() {
     fetchData("tags", "GET")
     .then(res => res.json())
-    .then(tags => setTags(tags))
+    .then(tags => {console.log(tags); setTags(tags)})
     .catch(err => console.log("Couldn't fetch tags!", err));
   }
 
@@ -146,8 +147,13 @@ function App() {
   }
 
   function handleCreateTag(label) {
-    fetchData("tag", "POST", { label });
-    loadTags();
+    fetchData("tag", "POST", { label })
+    .then(loadTags);  
+  }
+
+  function handleLogOut() {
+    setIsLoggedIn(false);
+    document.cookie = "token=; max-age=0";
   }
 
   const isOnBigScreen = useMediaQuery({ query: "(max-width: 1028px)" });
@@ -168,17 +174,25 @@ function App() {
       : isOnBigScreen ? 20
       : 20;
 
-  useEffect(() => {
-    fetchData("tags", "GET")
-    .then(res => res.json())
-    .then(tags => setTags(tags))
-    .catch(err => console.log("Couldn't fetch tags!", err));
+  useMemo(() => {
+    fetchData("logged", "GET")
+    .then(res => setIsLoggedIn(res.ok))
+    .catch(setIsLoggedIn(false));
+  }, [])
 
-    fetchData(activeTab, "GET")
-    .then(res => res.json())
-    .then(contacts => setContacts(contacts))
-    .catch(err => console.log("Couldn't fetch contacts: ", err)) //TODO Error pages!
-  }, [activeTab]);
+  useEffect(() => {
+    if (isLoggedIn) {
+      fetchData("tags", "GET")
+      .then(res => res.json())
+      .then(tags => {console.log(tags); setTags(tags)})
+      .catch(err => console.log("Couldn't fetch tags!", err));
+
+      fetchData(activeTab, "GET")
+      .then(res => res.json())
+      .then(contacts => setContacts(contacts))
+      .catch(err => console.log("Couldn't fetch contacts: ", err)) //TODO Error pages!
+    }
+  }, [activeTab, isLoggedIn]);
 
   if (!isLoggedIn)
     return <UserAccess onSuccess={setIsLoggedIn}/>
@@ -243,7 +257,7 @@ function App() {
               icon="logout"
               fill={true}
               size={28}
-              onClick={() => setIsLoggedIn(false)}
+              onClick={handleLogOut}
             />
             <NavItem icon="settings" fill={true} size={28} isDisabled={true} />
           </NavGroup>
