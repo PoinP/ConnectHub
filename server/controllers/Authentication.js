@@ -109,6 +109,17 @@ const registerUser = async (req, res) =>{
     }
 };
 
+const logoutUser = async (req, res) => {
+  const token = req.cookies.token;
+  const user = AuthUser.findOne({token});
+  if (!user)
+    return res.status(400).send(`Bad cookie`);
+
+  user.token = "";
+  await user.save();
+  return res.status(200);
+}
+
 const loginUser = async (req, res) =>{
     try {
         const { username, password } = req.body;
@@ -145,4 +156,4 @@ const isLoggedIn = async (req, res) => {
     }
 }
 
-module.exports = { registerUser, loginUser, isLoggedIn };
+module.exports = { registerUser, loginUser, logoutUser, isLoggedIn };
