@@ -69,6 +69,13 @@ const validationSchema = new ValidationSchema({
 
 const validator = new Validator(validationSchema);
 
+async function getUserByToken(token)
+{
+  if (!token)
+    return null;
+  return await AuthUser.findOne({token});
+}
+
 const registerUser = async (req, res) =>{
     try {
         const { email, username, password } = req.body;
@@ -126,4 +133,16 @@ const loginUser = async (req, res) =>{
     }
 };
 
-module.exports = { registerUser, loginUser };
+const isLoggedIn = async (req, res) => {
+    try {
+        const user = await getUserByToken(req.cookies.token);
+        if (!user)
+            return res.status(401).send();
+
+        return res.status(200).send();
+    } catch (error) {
+        res.status(500).send(`${error}`);
+    }
+}
+
+module.exports = { registerUser, loginUser, isLoggedIn };
