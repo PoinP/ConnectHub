@@ -1,14 +1,42 @@
 const Users = require("../models/Users")
+const Contact = require("../models/Contact")
 
 async function getUserByToken(token)
 {
     return await Users.findOne({token});
 }
 
-async function getTags(req, res) {
-    const user = await getUserByToken(req.cookies.token);
-    res.status(200).json(user.tags);
+async function getUserAndContactsByToken(token) {
+    let user = await getUserByToken(token);
+    if (!user)
+      return null;
+  
+    return {
+      user: user,
+      contacts: await Contact.find({_id: {$in: user.contactIds}})
+    };
 }
+
+
+async function getTags(req, res) {
+    const fullUser = await getUserAndContactsByToken(req.cookies.token);
+    if (!fullUser)
+        return res.status(400).send(`Bad cookie`);
+
+    let response = []
+    fullUser.user.tags.forEach(tag => {
+        let fullContacts = fullUser.contacts.filter(contact => contact.tags.includes(tag))
+        let contactIds = [];
+        fullContacts.forEach(contact => contactIds.push(contact._id))
+        response.push({
+            label: tag,
+            contacts: contactIds
+        })
+    });
+
+    res.status(200).json(response);
+}
+
 
 // == Obsolete ==
 // function getTag(req, res) {

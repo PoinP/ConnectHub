@@ -1,6 +1,6 @@
 const express = require('express');
 
-const controller = require("../controllers/TagController");
+const controller = require("../controllers/TagControllerDB");
 
 const router = express.Router();
 
