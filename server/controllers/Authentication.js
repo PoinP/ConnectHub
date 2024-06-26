@@ -111,7 +111,7 @@ const registerUser = async (req, res) =>{
 
 const logoutUser = async (req, res) => {
   const token = req.cookies.token;
-  const user = AuthUser.findOne({token});
+  const user = await AuthUser.findOne({token});
   if (!user)
     return res.status(400).send(`Bad cookie`);
 
