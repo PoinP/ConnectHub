@@ -1,4 +1,18 @@
-const User = require("../models/Contacts.js");
+const User = require("../models/Contact.js");
+
+
+// CREATE
+const createContact = async (req, res) => {
+  try {
+      const user = req.body; // Extract user data from request body
+      const newUser = new User(user); // Create a new User instance with the user data
+      await newUser.save(); // Save the new user to the database
+      res.status(201).json(newUser); // Respond with the newly created user
+  } catch (error) {
+      res.status(409).json({ message: error.message }); // Handle any errors
+  }
+};
+
 
 // READ
 
@@ -126,6 +140,7 @@ const markAsFavourite = async (req, res) => {
 };
 
 module.exports = {
+  createContact,
     getContacts,
     getContactByEmail,
     getContactFriends,
