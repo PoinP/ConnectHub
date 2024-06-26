@@ -27,7 +27,7 @@ async function getUserAndContactsByToken(token) {
 
 
 async function validateTags(user, contact) {
-  if (!user.tags)
+  if (!user || !user.tags)
     retrun;
   
   let tagsSet = new Set(user.tags);
