@@ -151,8 +151,15 @@ function App() {
   }
 
   function handleLogOut() {
+    fetchData("logout", "POST")
+      .then(() => {
+        document.cookie = "token=; max-age=0";
+      })
+      .catch((err) =>
+        console.log("An error has occured when logging out!", err)
+      );
+
     setIsLoggedIn(false);
-    document.cookie = "token=; max-age=0";
   }
 
   const isOnBigScreen = useMediaQuery({ query: "(max-width: 1028px)" });
