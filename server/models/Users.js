@@ -36,6 +36,15 @@ const userSchema = mongoose.Schema(
   }
 );
 
+userSchema.virtual('id').get(function(){
+  return this._id;
+});
+
+// Ensure virtual fields are serialised.
+userSchema.set('toJSON', {
+  virtuals: true
+});
+
 const AuthUser = mongoose.model("AuthUser", userSchema);
 
 module.exports = AuthUser;

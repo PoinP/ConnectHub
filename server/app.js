@@ -14,9 +14,16 @@ const connectDB = require('./configs/database.js');
 const app = express();
 const port = 8080;
 
+const corsOptions = {
+  origin: 'http://localhost:3000',   
+  methods: "GET,HEAD,POST,PATCH,PUT,DELETE,OPTIONS",
+  credentials: true,               
+  allowedHeaders: "Content-Type, Authorization, X-Requested-With, Accept",
+}
+
 // Middleware
 app.use(cookieParser())
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static('avatars'))

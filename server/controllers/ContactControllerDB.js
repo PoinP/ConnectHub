@@ -36,11 +36,11 @@ async function validateTags(user, contact) {
 }
 
 async function getContact(req, res) {
-  const { _id } = req.body;
+  const { id } = req.body;
   try {
-      const foundContact = await Contact.findById(_id);
+      const foundContact = await Contact.findById(id);
       if (!foundContact) {
-        res.status(404).send(`A user with an id of ${_id} can not be found!`);
+        res.status(404).send(`A user with an id of ${id} can not be found!`);
         return;
       }
     
@@ -53,7 +53,7 @@ async function getContact(req, res) {
 }
 
 async function createContact(req, res) {
-  const contact = req.body;
+  const contact = JSON.parse(req.body.contact);
   const { _, name, details, info, tags } = contact;
 
   if ([name, details, info, tags].includes(undefined)) {
@@ -95,10 +95,10 @@ async function createContact(req, res) {
 }
 
 async function updateContact(req, res) {
-  const contact = req.body;
-  const { _id, avatar, name, details, info, tags } = contact;
+  const contact = JSON.parse(req.body.contact);
+  const { id, avatar, name, details, info, tags } = contact;
 
-  if ([_id, avatar, name, details, info, tags].includes(undefined)) {
+  if ([id, avatar, name, details, info, tags].includes(undefined)) {
     res
       .status(400)
       .send(
@@ -114,12 +114,13 @@ async function updateContact(req, res) {
 
   try
   {
-    const toEditContact = await Contact.findByIdAndUpdate(_id, contact);
+    const user = await getUserByToken(req.cookies.token);
+    const toEditContact = await Contact.findByIdAndUpdate(id, contact, {new: true});
 
     if (!toEditContact)
-      res.status(404).send(`A user with an id of ${_id} can not be found!`);
+      res.status(404).send(`A contact with an id of ${id} can not be found!`);
 
-    validateTags(toEditContact);
+    validateTags(user, toEditContact);
     // TEMP
     updateSearch(contact);
     // TEMP
@@ -134,23 +135,23 @@ async function updateContact(req, res) {
 }
 
 async function deleteContact(req, res) {
-  const { _id } = req.body;
+  const { id } = req.body;
 
-  if (_id === undefined)
+  if (id === undefined)
     return res.status(400).send(`id is required...`);
 
-  const user = getUserByToken(req.cookies.token)
+  const user = await getUserByToken(req.cookies.token)
   if (!user)
     return res.status(400).send(`Bad cookie`);
 
-  const toDelete = await Contact.findByIdAndDelete(_id);
+  const toDelete = await Contact.findByIdAndDelete(id);
   if (!toDelete)
-    return res.status(404).send(`Contact with id ${_id} was not found`);
+    return res.status(404).send(`Contact with id ${id} was not found`);
   
-  user.contactIds = user.contactIds.filter((id) => id._id !== _id);
+  user.contactIds = user.contactIds.filter((id) => id._id !== id);
   await user.save();
 
-  return res.status(200).send(`Contact with id ${_id} was deleted successfully`);
+  return res.status(200).send(`Contact with id ${id} was deleted successfully`);
 }
 
 async function deleteAllContacts(req, res) {
@@ -168,11 +169,7 @@ async function getAllContacts(req, res) {
 async function getFavoriteContacts(req, res) {
   try {
     const fullUser = await getUserAndContactsByToken(req.cookies.token);
-
-    const favoriteContacts = fullcontacts.filter(contact => contact.isfavorite == true );
-    console.log(fullUser.contacts);
-      if (favoriteContacts.length == 0)
-        return res.status(404).send(`No favorite contacts...`);  
+    const favoriteContacts = fullUser.contacts.filter(contact => contact.isFavorite === true );
     return res.status(200).json(favoriteContacts);
     
   } catch (error) {
