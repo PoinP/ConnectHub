@@ -115,9 +115,9 @@ const logoutUser = async (req, res) => {
   if (!user)
     return res.status(400).send(`Bad cookie`);
 
-  user.token = "";
+  user.token = undefined;
   await user.save();
-  return res.status(200);
+  return res.status(200).send(`Logged out`);
 }
 
 const loginUser = async (req, res) =>{
