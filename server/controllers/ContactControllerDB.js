@@ -6,8 +6,7 @@ const { sortContacts } = require("../utils/utilities");
 
 const { updateSearch } = require("./SearchControllerDB");
 
-async function getUserAndContactsByToken(token)
-{
+async function getUserAndContactsByToken(token) {
   let user = await Users.findOne({token});
   if (!user)
     return null;

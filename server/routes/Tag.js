@@ -5,7 +5,7 @@ const controller = require("../controllers/TagController");
 const router = express.Router();
 
 router.route("/tag")
-.get(controller.getTag)
+//.get(controller.getTag)
 .post(controller.createTag)
 .delete(controller.deleteTag);
 

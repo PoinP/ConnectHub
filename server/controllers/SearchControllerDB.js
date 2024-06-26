@@ -1,4 +1,4 @@
-const ContactSearch = require("../services/PredictiveSearch/ContactSearch.js");
+const ContactSearch = require("../services/PredictiveSearch/FixedContactSearch.js");
 const User = require("../models/Contact.js");
 
 const cs = new ContactSearch();
