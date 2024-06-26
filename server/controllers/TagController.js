@@ -1,50 +1,42 @@
 let tags = require("../data/tags.json");
-const Users = require("../models/Users")
 
-async function getUserByToken(token)
-{
-    return await Users.findOne({token});
+function getTags(req, res) {
+    res.status(200).json(tags);
 }
 
-async function getTags(req, res) {
-    const user = await getUserByToken(req.cookies.token);
-    res.status(200).json(user.tags);
+function getTag(req, res) {
+    const { label } = req.query;
+    const tag = tags.find(tag => tag.label === label);
+
+    if (!tag) {
+        res.status(404).send(`The tag ${label} could not be found!`);
+        return;
+    }
+
+    res.status(200).json(tag);
 }
 
-// == Obsolete ==
-// function getTag(req, res) {
-//     const { label } = req.query;
-//     const tag = tags.find(tag => tag.label === label);
-
-//     if (!tag) {
-//         res.status(404).send(`The tag ${label} could not be found!`);
-//         return;
-//     }
-
-//     res.status(200).json(tag);
-// }
-
-async function createTag(req, res) {
+function createTag(req, res) {
     const { label } = req.body;
-    const user = await getUserByToken(req.cookies.token);
 
-    const tagsSet = new Set(user.tags);
-    tagsSet.add(label);
-    user.tags = Array.from(tagsSet);
-    await user.save();
-    
-    res.status(200).json(user.tags)
+    const foundTag = tags.find(tag => tag.label === label);
+    if (foundTag)
+        return;
+
+    const newTag = { label: label, contacts: [] };
+    tags.push(newTag);
+    res.status(200).json(newTag)
 }
 
-async function deleteTag(req, res) {
+function deleteTag(req, res) {
     const { label } = req.body;
-    const user = await getUserByToken(req.cookies.token);
 
-    user.tags = user.tags.filter(tag => tag != label)
-    await user.save();
-    
-    res.status(200).json(user.tags)
+    const foundTagIndex = tags.findIndex(tag => tag.label === label);
+    if (foundTagIndex === -1)
+        return;
+
+    tags = tags.splice(foundTagIndex, 1);
+    res.status(200);
 }
 
-//module.exports = { getTags, getTag, createTag, deleteTag };
-module.exports = { getTags, createTag, deleteTag };
+module.exports = { getTags, getTag, createTag, deleteTag };
