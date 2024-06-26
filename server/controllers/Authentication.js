@@ -21,18 +21,18 @@ const registerUser = async (req, res) =>{
 
 const loginUser = async (req, res) =>{
     try {
-        const { email, username, password } = req.body;
+        const { username, password } = req.body;
 
-        if ([email, username, password].includes(undefined))
-            return res.status(400).send(`No email or password provided`);
+        if ([username, password].includes(undefined))
+            return res.status(400).send(`No username or password provided`);
 
-        const user = await AuthUser.findOne({ email:email });
+        const user = await AuthUser.findOne({ username:username });
         if (!user) return res.status(404).json({ message: "User not found" });
 
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) return res.status(400).json({ message: "Invalid credentials" });
 
-        const token = jwt.sign({ email: user.email }, process.env.JWT_SECRET);
+        const token = jwt.sign({ username: user.username }, process.env.JWT_SECRET);
         delete user.password;
         res.status(200).json({ user, token });
 
