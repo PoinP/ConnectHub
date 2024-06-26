@@ -4,11 +4,11 @@ const bcrypt = require("bcryptjs");
 
 const registerUser = async (req, res) =>{
     try {
-        const { email, password } = req.body;
+        const { email, username, password } = req.body;
 
         const hash = await bcrypt.hash(password, 8);
 
-        const newUser = new AuthUser({ email, password: hash, contactIds: [], tags: []});
+        const newUser = new AuthUser({ email, username, password: hash, contactIds: [], tags: []});
 
         const user = await newUser.save();
 
@@ -21,9 +21,9 @@ const registerUser = async (req, res) =>{
 
 const loginUser = async (req, res) =>{
     try {
-        const { email, password } = req.body;
+        const { email, username, password } = req.body;
 
-        if ([email, password].includes(undefined))
+        if ([email, username, password].includes(undefined))
             return res.status(400).send(`No email or password provided`);
 
         const user = await AuthUser.findOne({ email:email });
