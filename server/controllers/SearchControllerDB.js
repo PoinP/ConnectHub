@@ -1,4 +1,4 @@
-const ContactSearch = require("../services/PredictiveSearch/FixedContactSearch.js");
+const ContactSearch = require("../services/PredictiveSearch/ContactSearch.js");
 const User = require("../models/Contact.js");
 
 const cs = new ContactSearch();
@@ -36,12 +36,4 @@ async function search(req, res) {
     return res.status(200).json(contacts);
 }
 
-async function searchFavorites(req, res) {
-    const { query } = req.query;
-    const queryResults = cs.search(query);
-    const contacts = (await Promise.all(queryResults.map((result) => getUser(result)))).filter((user) => user && user.isFavorite);
-
-    return res.status(200).json(contacts);
-}
-
-module.exports = { search, searchFavorites, updateSearch };
+module.exports = { search, updateSearch };
