@@ -19,16 +19,24 @@ class ContactSearch extends PredictiveSearch {
     this.addData(last, contactId);
     this.addData(contactName, contactId);
 
-    for (const prop in info) {
-      for (const val of info[prop]) {
-        this.addData(val.content, contactId);
+    if (info) {
+      for (const prop in info) {
+        if (Array.isArray(info[prop])) {
+          for (const val of info[prop]) {
+            this.addData(val.content, contactId);
+          }
+        }
       }
     }
 
-    for (const prop in details) {
-      for (const val of details[prop]) {
-        this.addData(val.content, contactId);
-      }
+    if (details) {
+      for (const prop in details) {
+        if (Array.isArray(details[prop])) {
+          for (const val of details[prop]) {
+            this.addData(val.content, contactId);
+          }
+        }
+      } 
     }
 
     for (const tag of tags) {
