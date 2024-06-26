@@ -2,12 +2,14 @@ const mongoose = require("mongoose");
 
 const userSchema = mongoose.Schema(
   {
+    _id: String,
+
     avatar: {
       type: String,
       required: false,
     },
 
-    isFavourite: {
+    isFavorite: {
       type: Boolean,
       default: false,
     },

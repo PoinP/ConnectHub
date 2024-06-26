@@ -17,7 +17,6 @@ async function getUser(id) {
     return foundUser || null;
 }
 
-
 async function updateSearch(contact) {
     await cs.updateContact(contact);
 }

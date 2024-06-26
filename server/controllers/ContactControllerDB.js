@@ -6,8 +6,15 @@ const { sortContacts } = require("../utils/utilities");
 
 const { updateSearch } = require("./SearchControllerDB");
 
+async function getUserByToken(token)
+{
+  if (!token)
+    return null;
+  return await Users.findOne({token});
+}
+
 async function getUserAndContactsByToken(token) {
-  let user = await Users.findOne({token});
+  let user = await getUserByToken(token);
   if (!user)
     return null;
 
@@ -16,6 +23,7 @@ async function getUserAndContactsByToken(token) {
     contacts: await Contact.find({_id: {$in: user.contactIds}})
   };
 }
+
 
 async function validateTags(user, contact) {
   let tagsSet = new Set(user.tags);
@@ -57,18 +65,16 @@ async function createContact(req, res) {
     return;
   }
 
-  const token = req.cookies.token;
-  const user = await Users.findOne( {token} )
+  const user = await getUserByToken(req.cookies.token)
   if (!user)
     return res.status(400).send("invalid cookie");
-
 
   const avatar = req.file;
   const avatarPath = avatar
     ? `http://localhost:8080/${req.file.filename}`
     : null;
 
-  const newContact = { ...contact, avatar: avatarPath };
+  const newContact = { ...contact, _id: req.contactId ,avatar: avatarPath };
 
   // TEMP
   updateSearch(newContact);
@@ -130,8 +136,7 @@ async function deleteContact(req, res) {
   if (_id === undefined)
     return res.status(400).send(`id is required...`);
 
-  const token = req.cookies.token;
-  const user = await Users.findOne({token});
+  const user = getUserByToken(req.cookies.token)
   if (!user)
     return res.status(400).send(`Bad cookie`);
 
@@ -158,14 +163,14 @@ async function getFavoriteContacts(req, res) {
   try {
     const fullUser = await getUserAndContactsByToken(req.cookies.token);
 
-    const favouriteContacts = fullUser.contacts.filter(contact => contact.isFavourite == true );
+    const favoriteContacts = fullcontacts.filter(contact => contact.isfavorite == true );
     console.log(fullUser.contacts);
-      if (favouriteContacts.length == 0)
-        return res.status(404).send(`No favourite contacts...`);  
-    return res.status(200).json(favouriteContacts);
+      if (favoriteContacts.length == 0)
+        return res.status(404).send(`No favorite contacts...`);  
+    return res.status(200).json(favoriteContacts);
     
   } catch (error) {
-    console.log("Error fetching favourite contacts: ", error);
+    console.log("Error fetching favorite contacts: ", error);
     res.status(500).send(`${error}`);
   }
 }
