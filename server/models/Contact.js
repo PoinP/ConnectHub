@@ -65,7 +65,7 @@ const userSchema = mongoose.Schema(
         },
       }],
 
-      relationship: {
+      relationship: [{
         type: {
           type: String,
         },
@@ -75,9 +75,9 @@ const userSchema = mongoose.Schema(
         content: {
           type: String,
         },
-      },
+      }],
 
-      nickname: {
+      nickname: [{
         type: {
           type: String,
         },
@@ -87,7 +87,7 @@ const userSchema = mongoose.Schema(
         content: {
           type: String,
         },
-      },
+      }],
     },
 
     tags: [
