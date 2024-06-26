@@ -267,6 +267,8 @@ export function ContactPopup({ contact, onAddContact, onEditContact, onSetPopup 
           onAddContact(newContact, selectedAvatarBlob);
       }
 
+      setSelectedAvatarBlob(null);
+      setSelectedAvatarUrl(null);
       onSetPopup(false);
     }
 
