@@ -2,7 +2,7 @@ const express = require('express');
 const multer = require('multer');
 const { generateId } = require('../middlewares/Contact');
 
-const controller = require("../controllers/ContactController");
+const controller = require("../controllers/ContactControllerDB");
 
 const router = express.Router();
 

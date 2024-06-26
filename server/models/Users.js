@@ -1,16 +1,31 @@
 const mongoose = require("mongoose");
 
-const contactSchema = mongoose.Schema(
+const userSchema = mongoose.Schema(
   {
     email: {
       type: String,
       required: true,
       unique: true,
     },
+    username: {
+      type: String,
+      required: true,
+      unique: true
+    },
     password: {
       type: String,
       required: true,
     },
+    contactIds: [
+      {
+        _id: String
+      }
+    ],
+    tags: [
+      {
+        type: String
+      }
+    ]
   },
   {
     timestamps: true,
@@ -18,6 +33,6 @@ const contactSchema = mongoose.Schema(
   }
 );
 
-const AuthUser = mongoose.model("AuthUser", contactSchema);
+const AuthUser = mongoose.model("AuthUser", userSchema);
 
 module.exports = AuthUser;

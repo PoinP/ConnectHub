@@ -8,13 +8,11 @@ const registerUser = async (req, res) =>{
 
         const hash = await bcrypt.hash(password, 8);
 
-        const newUser = new AuthUser({ email, password: hash });
+        const newUser = new AuthUser({ email, password: hash, contactIds: [], tags: []});
 
         const user = await newUser.save();
 
         res.status(201).json(user);
-
-
 
     } catch (error) {
         res.status(500).json({ message: error.message });

@@ -19,6 +19,8 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static('avatars'))
 
+// app.use(express.json())
+
 // Routes
 app.use("/", contactRouter);
 app.use("/", searchRouter);
