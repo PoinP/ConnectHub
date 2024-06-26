@@ -156,7 +156,10 @@ async function deleteAllContacts(req, res) {
 };
 
 async function getAllContacts(req, res) {
-  res.status(200).json((await getUserAndContactsByToken(req.cookies.token)).contacts);
+  let fullUser = await getUserAndContactsByToken(req.cookies.token);
+  if (!fullUser)
+    return res.status(400).send(`Bad cookie`);
+  res.status(200).json(fullUser.contacts);
 }
 
 async function getFavoriteContacts(req, res) {
