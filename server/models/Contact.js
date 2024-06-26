@@ -61,7 +61,7 @@ const userSchema = mongoose.Schema(
           type: String,
         },
         content: {
-          type: Date,
+          type: String,
         },
       }],
 
@@ -97,7 +97,7 @@ const userSchema = mongoose.Schema(
     ]
   },
   {
-    timestamps: true,
+    //timestamps: true,
     collection: "contacts",
   }
 );
