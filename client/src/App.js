@@ -43,7 +43,6 @@ function App() {
     fetchFormData("contact", "POST", formData)
       .then(res => res.json())
       .then(contact => {
-        console.log(contact);
         setSelectedContact(contact);
         loadContacts();
       })
@@ -119,7 +118,7 @@ function App() {
   function loadTags() {
     fetchData("tags", "GET")
     .then(res => res.json())
-    .then(tags => {console.log(tags); setTags(tags)})
+    .then(tags => setTags(tags))
     .catch(err => console.log("Couldn't fetch tags!", err));
   }
 
@@ -184,7 +183,7 @@ function App() {
     if (isLoggedIn) {
       fetchData("tags", "GET")
       .then(res => res.json())
-      .then(tags => {console.log(tags); setTags(tags)})
+      .then(tags => setTags(tags))
       .catch(err => console.log("Couldn't fetch tags!", err));
 
       fetchData(activeTab, "GET")

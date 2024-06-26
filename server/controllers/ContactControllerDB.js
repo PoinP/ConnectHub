@@ -1,6 +1,7 @@
 //let tags = require("../data/tags.json");
 let Contact = require("../models/Contact.js")
-let Users = require("../models/Users.js")
+let Users = require("../models/Users.js");
+const searchObject = require("../shared/SearchObject.js");
 
 const { sortContacts } = require("../utils/utilities");
 
@@ -79,9 +80,6 @@ async function createContact(req, res) {
 
   const newContact = { ...contact, _id: req.contactId ,avatar: avatarPath };
 
-  // TEMP
-  updateSearch(newContact);
-  // TEMP
   validateTags(user, newContact);
 
   const dbContact = new Contact(newContact);
@@ -91,6 +89,7 @@ async function createContact(req, res) {
   
   await user.save();
 
+  searchObject.addPredictor(user._id, dbContact);
   res.status(200).json(dbContact);
 }
 
@@ -121,11 +120,9 @@ async function updateContact(req, res) {
       res.status(404).send(`A contact with an id of ${id} can not be found!`);
 
     validateTags(user, toEditContact);
-    // TEMP
-    updateSearch(contact);
-    // TEMP
-
     await toEditContact.save();
+    
+    searchObject.updatePredictor(user._id, toEditContact);
     res.status(200).send(toEditContact);
   }
   catch(error)
@@ -151,6 +148,7 @@ async function deleteContact(req, res) {
   user.contactIds = user.contactIds.filter((id) => id._id !== id);
   await user.save();
 
+  searchObject.deletePredictor(user._id, toDelete);
   return res.status(200).send(`Contact with id ${id} was deleted successfully`);
 }
 

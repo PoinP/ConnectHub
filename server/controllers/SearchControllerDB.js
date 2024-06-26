@@ -1,31 +1,27 @@
-const ContactSearch = require("../services/PredictiveSearch/ContactSearch.js");
-const User = require("../models/Contact.js");
+const User = require("../models/Users.js");
+const Contact = require("../models/Contact.js");
+const searchObject = require("../shared/SearchObject.js");
 
-const cs = new ContactSearch();
-
-async function initializeSearch() {
-    const contacts = await User.find();
-    for (const contact of contacts) {
-        cs.addContact(contact);
-    }
+async function getContact(id) {
+    const foundContact = await Contact.findById(id);
+    return foundContact || null;
 }
 
-initializeSearch();
-
-async function getUser(id) {
-    const foundUser = await User.findById(id);
-    return foundUser || null;
-}
-
-async function updateSearch(contact) {
-    await cs.updateContact(contact);
+async function getUserByToken(token)
+{
+  if (!token)
+    return null;
+  return await User.findOne({token});
 }
 
 async function search(req, res) {
     const { query, tabFilter } = req.query;
 
-    const queryResults = cs.search(query);
-    let contacts = await Promise.all(queryResults.map((result) => getUser(result)));
+    const user = await getUserByToken(req.cookies.token);
+    if (!user) return res.status(404, "Invalid token!");
+
+    const queryResults = searchObject.getPredictor(user._id).search(query);
+    let contacts = await Promise.all(queryResults.map((result) => getContact(result)));
 
     if (tabFilter === "favorites") {
         contacts = contacts.filter((contact) => contact && contact.isFavorite);
@@ -36,4 +32,4 @@ async function search(req, res) {
     return res.status(200).json(contacts);
 }
 
-module.exports = { search, updateSearch };
+module.exports = { search };
