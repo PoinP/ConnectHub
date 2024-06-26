@@ -13,48 +13,88 @@ const userSchema = mongoose.Schema(
     },
 
     name: {
-      firtsName: {
+      first: {
         type: String,
-        required: true,
+        required: true
       },
-      lastName: {
+      last: {
         type: String,
-        required: true,
+        required: true
       },
     },
+    
     details: {
-      phoneNumbers: [
+      phone: [
         {
-          type: String,
-          phoneNumberType: {
+          type: {
             type: String,
           },
-          required: true,
+          detail: {
+            type: String,
+          },
+          content: {
+            type: String,
+          },
         },
       ],
-      email: {
-        type: String,
-        required: true,
-        emailType: {
-          type: String,
+      mail: [
+        {
+          type: {
+            type: String,
+          },
+          detail: {
+            type: String,
+          },
+          content: {
+            type: String,
+          },
         },
-      },
+      ],
     },
 
     info: {
-      birthday: {
-        type: Date,
-        required: true,
-        birthdayType: {
+      date: [{
+        type: {
+          type: String,
+        },
+        detail: {
+          type: String,
+        },
+        content: {
+          type: Date,
+        },
+      }],
+
+      relationship: {
+        type: {
+          type: String,
+        },
+        detail: {
+          type: String,
+        },
+        content: {
           type: String,
         },
       },
 
-      relationship: {
-        type: String,
-        required: true,
+      nickname: {
+        type: {
+          type: String,
+        },
+        detail: {
+          type: String,
+        },
+        content: {
+          type: String,
+        },
       },
     },
+
+    tags: [
+      {
+        type: String
+      }
+    ]
   },
   {
     timestamps: true,

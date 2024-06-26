@@ -1,5 +1,6 @@
 let tags = require("../data/tags.json");
 let contacts = require("../data/contacts.json");
+let Contact = require("../models/Contact.js")
 
 const { sortContacts } = require("../utils/utilities");
 
@@ -47,7 +48,7 @@ function getContact(req, res) {
 }
 
 function createContact(req, res) {
-  const contact = JSON.parse(req.body.contact);
+  const contact = req.body;
   const { _, name, details, info, tags } = contact;
 
   if ([name, details, info, tags].includes(undefined)) {
@@ -74,8 +75,7 @@ function createContact(req, res) {
   updateSearch(newContact);
   // TEMP
 
-  contacts.push(newContact); // TODO: DB
-  contacts = sortContacts(contacts);
+  Contact.create(contact);
   res.status(200).json(newContact);
 }
 
