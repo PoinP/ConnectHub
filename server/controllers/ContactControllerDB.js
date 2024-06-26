@@ -4,7 +4,7 @@ let Users = require("../models/Users.js")
 
 const { sortContacts } = require("../utils/utilities");
 
-const { updateSearch } = require("./SearchController");
+const { updateSearch } = require("./SearchControllerDB");
 
 async function getUserAndContactsByToken(token)
 {
@@ -146,6 +146,11 @@ async function deleteContact(req, res) {
   return res.status(200).send(`Contact with id ${_id} was deleted successfully`);
 }
 
+async function deleteAllContacts(req, res) {
+  await Contact.deleteMany({});
+  res.status(200).send(`All contacts have been deleted successfully`);
+};
+
 async function getAllContacts(req, res) {
   res.status(200).json((await getUserAndContactsByToken(req.cookies.token)).contacts);
 }
@@ -195,5 +200,6 @@ module.exports = {
   deleteContact,
   getAllContacts,
   getFavoriteContacts,
-  getTagContacts
+  getTagContacts,
+  deleteAllContacts
 };

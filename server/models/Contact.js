@@ -60,11 +60,11 @@ const userSchema = mongoose.Schema(
           type: String,
         },
         content: {
-          type: Date,
+          type: String,
         },
       }],
 
-      relationship: {
+      relationship: [{
         type: {
           type: String,
         },
@@ -74,9 +74,9 @@ const userSchema = mongoose.Schema(
         content: {
           type: String,
         },
-      },
+      }],
 
-      nickname: {
+      nickname: [{
         type: {
           type: String,
         },
@@ -86,7 +86,7 @@ const userSchema = mongoose.Schema(
         content: {
           type: String,
         },
-      },
+      }],
     },
 
     tags: [
@@ -96,7 +96,7 @@ const userSchema = mongoose.Schema(
     ]
   },
   {
-    timestamps: true,
+    //timestamps: true,
     collection: "contacts",
   }
 );
